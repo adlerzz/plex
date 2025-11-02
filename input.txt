@@ -3,3 +3,6 @@ the o = "another text";
 the e = ["foo", "bar"];
 the a = 12.3;
 the x = 0xA450;
+
+the ef = [1..6] |>> _ + 1;
+console.log(ef);
