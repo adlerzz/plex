@@ -6,82 +6,22 @@
     "value": "the"
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
+    "type": "ID",
     "raw": "s",
     "length": 1,
     "value": "s"
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
+    "type": "=",
     "raw": "=",
     "length": 1,
     "value": "="
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
-    "raw": "\"",
-    "length": 1,
-    "value": "\""
-  },
-  {
-    "type": "ID",
-    "raw": "text",
-    "length": 4,
-    "value": "text"
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
-    "raw": "o",
-    "length": 1,
-    "value": "o"
-  },
-  {
-    "type": "ID",
-    "raw": "f",
-    "length": 1,
-    "value": "f"
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
-    "raw": "\\",
-    "length": 1,
-    "value": "\\"
   },
   {
     "type": "STRING",
-    "raw": "\"some\\\"\"",
-    "length": 8,
-    "value": "\"some\\\"\""
+    "raw": "\"text of \\\"some\\\"\"",
+    "length": 18,
+    "value": "\"text of \\\"some\\\"\""
   },
   {
     "type": ";",
@@ -90,88 +30,28 @@
     "value": ";"
   },
   {
-    "type": "BLANK",
-    "raw": "\r\n",
-    "length": 2,
-    "value": "\r\n"
-  },
-  {
-    "type": "?",
-    "raw": "t",
-    "length": 1,
-    "value": "t"
+    "type": "THE",
+    "raw": "the",
+    "length": 3,
+    "value": "the"
   },
   {
     "type": "ID",
-    "raw": "he",
-    "length": 2,
-    "value": "he"
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
     "raw": "o",
     "length": 1,
     "value": "o"
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
+    "type": "=",
     "raw": "=",
     "length": 1,
     "value": "="
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
-    "raw": "\"",
-    "length": 1,
-    "value": "\""
-  },
-  {
-    "type": "ID",
-    "raw": "another",
-    "length": 7,
-    "value": "another"
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
-    "raw": "t",
-    "length": 1,
-    "value": "t"
-  },
-  {
-    "type": "ID",
-    "raw": "ext",
-    "length": 3,
-    "value": "ext"
-  },
-  {
-    "type": "?",
-    "raw": "\"",
-    "length": 1,
-    "value": "\""
+    "type": "STRING",
+    "raw": "\"another text\"",
+    "length": 14,
+    "value": "\"another text\""
   },
   {
     "type": ";",
@@ -180,55 +60,25 @@
     "value": ";"
   },
   {
-    "type": "BLANK",
-    "raw": "\r\n",
-    "length": 2,
-    "value": "\r\n"
-  },
-  {
-    "type": "?",
-    "raw": "t",
-    "length": 1,
-    "value": "t"
+    "type": "THE",
+    "raw": "the",
+    "length": 3,
+    "value": "the"
   },
   {
     "type": "ID",
-    "raw": "he",
-    "length": 2,
-    "value": "he"
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
     "raw": "e",
     "length": 1,
     "value": "e"
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
+    "type": "=",
     "raw": "=",
     "length": 1,
     "value": "="
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
+    "type": "[",
     "raw": "[",
     "length": 1,
     "value": "["
@@ -240,37 +90,19 @@
     "value": "\"foo\""
   },
   {
-    "type": "?",
+    "type": ",",
     "raw": ",",
     "length": 1,
     "value": ","
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
+    "type": "STRING",
+    "raw": "\"bar\"",
+    "length": 5,
+    "value": "\"bar\""
   },
   {
-    "type": "?",
-    "raw": "\"",
-    "length": 1,
-    "value": "\""
-  },
-  {
-    "type": "ID",
-    "raw": "bar",
-    "length": 3,
-    "value": "bar"
-  },
-  {
-    "type": "?",
-    "raw": "\"",
-    "length": 1,
-    "value": "\""
-  },
-  {
-    "type": "?",
+    "type": "]",
     "raw": "]",
     "length": 1,
     "value": "]"
@@ -282,64 +114,28 @@
     "value": ";"
   },
   {
-    "type": "BLANK",
-    "raw": "\r\n",
-    "length": 2,
-    "value": "\r\n"
-  },
-  {
-    "type": "?",
-    "raw": "t",
-    "length": 1,
-    "value": "t"
+    "type": "THE",
+    "raw": "the",
+    "length": 3,
+    "value": "the"
   },
   {
     "type": "ID",
-    "raw": "he",
-    "length": 2,
-    "value": "he"
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
     "raw": "a",
     "length": 1,
     "value": "a"
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
+    "type": "=",
     "raw": "=",
     "length": 1,
     "value": "="
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
-    "raw": "1",
-    "length": 1,
-    "value": "1"
-  },
-  {
     "type": "NUM",
-    "raw": "2.3",
-    "length": 3,
-    "value": 2.3
+    "raw": "12.3",
+    "length": 4,
+    "value": 12.3
   },
   {
     "type": ";",
@@ -348,64 +144,28 @@
     "value": ";"
   },
   {
-    "type": "BLANK",
-    "raw": "\r\n",
-    "length": 2,
-    "value": "\r\n"
-  },
-  {
-    "type": "?",
-    "raw": "t",
-    "length": 1,
-    "value": "t"
+    "type": "THE",
+    "raw": "the",
+    "length": 3,
+    "value": "the"
   },
   {
     "type": "ID",
-    "raw": "he",
-    "length": 2,
-    "value": "he"
-  },
-  {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
     "raw": "x",
     "length": 1,
     "value": "x"
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
+    "type": "=",
     "raw": "=",
     "length": 1,
     "value": "="
   },
   {
-    "type": "BLANK",
-    "raw": " ",
-    "length": 1,
-    "value": " "
-  },
-  {
-    "type": "?",
-    "raw": "0",
-    "length": 1,
-    "value": "0"
-  },
-  {
-    "type": "ID",
-    "raw": "xA450",
-    "length": 5,
-    "value": "xA450"
+    "type": "HEX",
+    "raw": "0xA450",
+    "length": 6,
+    "value": 42064
   },
   {
     "type": ";",

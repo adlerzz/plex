@@ -1,3 +1,5 @@
+const q = (...types) => Object.fromEntries(types.map(type => [type, type]))
+
 const rules = {
     "LINE_COMMENT": /\/\/.*/,
     "BLOCK_COMMENT": /\/\*.*\*\//,
@@ -13,9 +15,14 @@ const rules = {
         (s) => parseFloat(s)
     ],
     "ID": /[_$@#A-Za-z][_$@#A-Za-z0-9]*/,
-    "=": "=",
-    ";": ";",
-    "BLANK": [/\s+/, null],
+    
+    ...q("=", ";", ",", "[", "]", "(", ")", "{", "}"),
+    
+    "BLANK": [
+        /\s+/, 
+        () => null
+    ],
+    
     "?": /.|\r|\n/,
 };
 

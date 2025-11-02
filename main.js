@@ -22,15 +22,13 @@ function match(text, rule) {
     if(rule.re){
         const found = text.match(rule.re);
         if (found?.index === 0) {
-            if(rule.callback === null){
-                return null;
-            }
             const raw = found[0];
+            const value = rule.callback(raw);
             return ({
                 type: rule.type,
                 raw,
                 length: raw.length,
-                value: rule.callback(raw),
+                value,
             })
         }
     }
@@ -48,7 +46,6 @@ function match(text, rule) {
     }
     return null;
 }
-
 
 
 async function main() {
@@ -73,9 +70,12 @@ async function main() {
             if (!m) {
                 continue;
             }
-            console.log(m);
-            tokens.push(m);
+            //console.log(m);
+            if(m.value !== null){
+                tokens.push(m);
+            }
             restText = restText.slice(m.length);
+            break;
         }
     }
 
