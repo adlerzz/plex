@@ -1,7 +1,6 @@
 const q = (...types) => Object.fromEntries(types.map(type => [type, type]))
 const Q = (...types) => Object.fromEntries(types.map(type => [type, type.toLowerCase()]))
 
-
 const rules = {
     "LINE_COMMENT": /\/\/.*/,
     "BLOCK_COMMENT": /\/\*.*\*\//,

@@ -47,25 +47,21 @@ function match(text, rule) {
     return null;
 }
 
-
-async function main() {
-    parseArgs(settings);
-
-    const {default: rules} = await import(`./${settings.rulesFile}`);
-    const extRules = Object.entries(rules).map( ([type, value]) => ({
+async function parseRules(rulesFile){
+    const {default: rules} = await import(`./${rulesFile}`);
+    return Object.entries(rules).map( ([type, value]) => ({
         type,
         re: isRegExp(value) ? value : (isArray(value) && isRegExp(value[0]) ? value[0]: null),
         substr: isString(value) ? value : null,
         callback: value?.[1] ?? (_ => _),  
     }));
+}
 
-    console.log(extRules);
-
-    const text = await fs.readFile(settings.inputFile, 'utf-8');
+function tokenize(text, rules) {
     const tokens = [];
     let restText = text;
     while (restText !== '') {
-        for(const rule of extRules){
+        for(const rule of rules){
             const m = match(restText, rule);
             if (!m) {
                 continue;
@@ -78,7 +74,18 @@ async function main() {
             break;
         }
     }
+    return tokens;
+}
 
+async function main() {
+    parseArgs(settings);
+
+    const extRules = await parseRules(settings.rulesFile);
+    console.log(extRules);
+
+    const text = await fs.readFile(settings.inputFile, 'utf-8');
+    const tokens = tokenize(text, extRules);
+    
     console.log(tokens);
     await fs.writeFile(settings.outputfile, JSON.stringify(tokens, null, 2), 'utf-8');
 };
