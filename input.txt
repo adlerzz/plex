@@ -5,8 +5,20 @@ the main =>> {
     the a = 12.3;
     the x = 0xA450;
 
-    the ef = [1..6] |>> _ + 1;
-    console.log(ef);    
+    the ef = [1..6] |>> it + 1;
+    the inc = (value) => value + 1;
+    // the inc = >> _ + 1;
+    // the ef = [1..6] |> inc;
+    console.log(ef);  
+
+   the wat = [1..10] 
+      |>> it + i  
+      |?> mod(it, 2) == 0
+      |<> acc + it, 100;
+  the noway = range(1, 10)
+    |> (it, i) => it + i
+    |? (it) => mod(it, 2) == 0
+    |< ((acc, it) => acc +it, 100);
 }
 
 main();

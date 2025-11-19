@@ -1,0 +1,11 @@
+>> - shortcut for inline function with one predefined argument named "_"
+>>> - shortcut for inline function with two predefined argument named "_1" and "_2"
+=>> - the same as "= >>"
+<< - composition of functions, e.g. "f << g (c)" is the asme as "f(g(c))"
+|> - map operator, "arr |> (x) => x + 1;" is like "arr.map( (x) => x + 1)" in JS
+|>> - shortcut for "|> (it, i) =>"
+|? - filter operator
+|?> - shortcut for "|? (it, i) =>"
+|< - fold (reduce) operator
+|<> - shortcut for "|< ()
+

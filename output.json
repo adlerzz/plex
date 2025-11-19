@@ -253,9 +253,9 @@
   },
   {
     "type": "ID",
-    "raw": "_",
-    "length": 1,
-    "value": "_"
+    "raw": "it",
+    "length": 2,
+    "value": "it"
   },
   {
     "type": "+",
@@ -274,6 +274,84 @@
     "raw": ";",
     "length": 1,
     "value": ";"
+  },
+  {
+    "type": "THE",
+    "raw": "the",
+    "length": 3,
+    "value": "the"
+  },
+  {
+    "type": "ID",
+    "raw": "inc",
+    "length": 3,
+    "value": "inc"
+  },
+  {
+    "type": "=",
+    "raw": "=",
+    "length": 1,
+    "value": "="
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "ID",
+    "raw": "value",
+    "length": 5,
+    "value": "value"
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": "=>",
+    "raw": "=>",
+    "length": 2,
+    "value": "=>"
+  },
+  {
+    "type": "ID",
+    "raw": "value",
+    "length": 5,
+    "value": "value"
+  },
+  {
+    "type": "+",
+    "raw": "+",
+    "length": 1,
+    "value": "+"
+  },
+  {
+    "type": "NUM",
+    "raw": "1",
+    "length": 1,
+    "value": 1
+  },
+  {
+    "type": ";",
+    "raw": ";",
+    "length": 1,
+    "value": ";"
+  },
+  {
+    "type": "LINE_COMMENT",
+    "raw": "// the inc = >> _ + 1;",
+    "length": 22,
+    "value": "// the inc = >> _ + 1;"
+  },
+  {
+    "type": "LINE_COMMENT",
+    "raw": "// the ef = [1..6] |> inc;",
+    "length": 26,
+    "value": "// the ef = [1..6] |> inc;"
   },
   {
     "type": "ID",
@@ -304,6 +382,462 @@
     "raw": "ef",
     "length": 2,
     "value": "ef"
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": ";",
+    "raw": ";",
+    "length": 1,
+    "value": ";"
+  },
+  {
+    "type": "THE",
+    "raw": "the",
+    "length": 3,
+    "value": "the"
+  },
+  {
+    "type": "ID",
+    "raw": "wat",
+    "length": 3,
+    "value": "wat"
+  },
+  {
+    "type": "=",
+    "raw": "=",
+    "length": 1,
+    "value": "="
+  },
+  {
+    "type": "[",
+    "raw": "[",
+    "length": 1,
+    "value": "["
+  },
+  {
+    "type": "NUM",
+    "raw": "1",
+    "length": 1,
+    "value": 1
+  },
+  {
+    "type": "..",
+    "raw": "..",
+    "length": 2,
+    "value": ".."
+  },
+  {
+    "type": "NUM",
+    "raw": "10",
+    "length": 2,
+    "value": 10
+  },
+  {
+    "type": "]",
+    "raw": "]",
+    "length": 1,
+    "value": "]"
+  },
+  {
+    "type": "|>>",
+    "raw": "|>>",
+    "length": 3,
+    "value": "|>>"
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": "+",
+    "raw": "+",
+    "length": 1,
+    "value": "+"
+  },
+  {
+    "type": "ID",
+    "raw": "i",
+    "length": 1,
+    "value": "i"
+  },
+  {
+    "type": "|?>",
+    "raw": "|?>",
+    "length": 3,
+    "value": "|?>"
+  },
+  {
+    "type": "ID",
+    "raw": "mod",
+    "length": 3,
+    "value": "mod"
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": ",",
+    "raw": ",",
+    "length": 1,
+    "value": ","
+  },
+  {
+    "type": "NUM",
+    "raw": "2",
+    "length": 1,
+    "value": 2
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": "==",
+    "raw": "==",
+    "length": 2,
+    "value": "=="
+  },
+  {
+    "type": "NUM",
+    "raw": "0",
+    "length": 1,
+    "value": 0
+  },
+  {
+    "type": "|<>",
+    "raw": "|<>",
+    "length": 3,
+    "value": "|<>"
+  },
+  {
+    "type": "ID",
+    "raw": "acc",
+    "length": 3,
+    "value": "acc"
+  },
+  {
+    "type": "+",
+    "raw": "+",
+    "length": 1,
+    "value": "+"
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": ",",
+    "raw": ",",
+    "length": 1,
+    "value": ","
+  },
+  {
+    "type": "NUM",
+    "raw": "100",
+    "length": 3,
+    "value": 100
+  },
+  {
+    "type": ";",
+    "raw": ";",
+    "length": 1,
+    "value": ";"
+  },
+  {
+    "type": "THE",
+    "raw": "the",
+    "length": 3,
+    "value": "the"
+  },
+  {
+    "type": "ID",
+    "raw": "noway",
+    "length": 5,
+    "value": "noway"
+  },
+  {
+    "type": "=",
+    "raw": "=",
+    "length": 1,
+    "value": "="
+  },
+  {
+    "type": "ID",
+    "raw": "range",
+    "length": 5,
+    "value": "range"
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "NUM",
+    "raw": "1",
+    "length": 1,
+    "value": 1
+  },
+  {
+    "type": ",",
+    "raw": ",",
+    "length": 1,
+    "value": ","
+  },
+  {
+    "type": "NUM",
+    "raw": "10",
+    "length": 2,
+    "value": 10
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": "|>",
+    "raw": "|>",
+    "length": 2,
+    "value": "|>"
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": ",",
+    "raw": ",",
+    "length": 1,
+    "value": ","
+  },
+  {
+    "type": "ID",
+    "raw": "i",
+    "length": 1,
+    "value": "i"
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": "=>",
+    "raw": "=>",
+    "length": 2,
+    "value": "=>"
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": "+",
+    "raw": "+",
+    "length": 1,
+    "value": "+"
+  },
+  {
+    "type": "ID",
+    "raw": "i",
+    "length": 1,
+    "value": "i"
+  },
+  {
+    "type": "|?",
+    "raw": "|?",
+    "length": 2,
+    "value": "|?"
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": "=>",
+    "raw": "=>",
+    "length": 2,
+    "value": "=>"
+  },
+  {
+    "type": "ID",
+    "raw": "mod",
+    "length": 3,
+    "value": "mod"
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": ",",
+    "raw": ",",
+    "length": 1,
+    "value": ","
+  },
+  {
+    "type": "NUM",
+    "raw": "2",
+    "length": 1,
+    "value": 2
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": "==",
+    "raw": "==",
+    "length": 2,
+    "value": "=="
+  },
+  {
+    "type": "NUM",
+    "raw": "0",
+    "length": 1,
+    "value": 0
+  },
+  {
+    "type": "|",
+    "raw": "|",
+    "length": 1,
+    "value": "|"
+  },
+  {
+    "type": "?",
+    "raw": "<",
+    "length": 1,
+    "value": "<"
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "(",
+    "raw": "(",
+    "length": 1,
+    "value": "("
+  },
+  {
+    "type": "ID",
+    "raw": "acc",
+    "length": 3,
+    "value": "acc"
+  },
+  {
+    "type": ",",
+    "raw": ",",
+    "length": 1,
+    "value": ","
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": ")",
+    "raw": ")",
+    "length": 1,
+    "value": ")"
+  },
+  {
+    "type": "=>",
+    "raw": "=>",
+    "length": 2,
+    "value": "=>"
+  },
+  {
+    "type": "ID",
+    "raw": "acc",
+    "length": 3,
+    "value": "acc"
+  },
+  {
+    "type": "+",
+    "raw": "+",
+    "length": 1,
+    "value": "+"
+  },
+  {
+    "type": "ID",
+    "raw": "it",
+    "length": 2,
+    "value": "it"
+  },
+  {
+    "type": ",",
+    "raw": ",",
+    "length": 1,
+    "value": ","
+  },
+  {
+    "type": "NUM",
+    "raw": "100",
+    "length": 3,
+    "value": 100
   },
   {
     "type": ")",

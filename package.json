@@ -1,8 +1,9 @@
 {
     "name": "plex",
     "type": "module",
-    "main": "main.js",
+    "main": "lex.main.js",
     "scripts": {
-        "start": "node main.js"
+        "start:lex": "node lex.main.js",
+        "start:prs": "node prs.main.js"
     }
 }
