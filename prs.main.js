@@ -1,144 +1,166 @@
 import fs from "node:fs/promises";
+import Bunch from "./bunch.class.js";
+import {parseArgs} from "./utils.js";
 
 const settings = {
-  rulesFile: 'prs.rules.js',
-  inputFile: 'input.txt',
-  outputfile: 'output.json',
+    rulesFile: 'prs.rules.js',
+    inputFile: 'input.txt',
+    outputfile: 'output.json',
 };
 
-function parseArgs(defaultSettings) {
-  process.argv.forEach(part => {
-    const [param, ...chunks] = part.split('=');
-    const value = chunks.join('=') ?? false;
-    defaultSettings[param] = value;
-  })
+const FIRST_NODE = "'F";
+
+function showDP(snap) {
+    const s = [...snap.rule.seq];
+    s.splice(snap.dp, 0, "_");
+    return s.join(" ");
 }
 
-async function parseRules(rulesFile){
-  const {default: rules} = await import(`./${rulesFile}`);
-  const rulesList = Object.entries(rules)
-    .flatMap( ([node, rules]) => rules
-      .map( rule => ({ node, seq: rule.split(" ")}))
-    );
-  const first = {node: "'F", seq: [rulesList[0].node]};
-  return [first, ...rulesList].map((it, id) => ({id, ...it}));     
+function snapToString(snap){
+    return `#${(snap.rule.id + "").padStart(4, '0')} ${snap.rule.node} : ${showDP(snap)}`;
 }
 
-function isNode(ctx, name) {
-  return ctx.nodes.includes(name);
+function stateToString(state){
+    return state.snaps.asArray()
+        .toSorted( (s1,s2) => s1.rule.id - s2.rule.id)
+        .map(snap => snapToString(snap));
 }
 
-function showI(i){
-    return i.map(r => `#${r.rule.id}, ${r.rule.node} : ${showDP(r)}`);
+function snapHash(snap){
+    return `${snap.rule.id}:${snap.dp}`;
 }
 
-function rulesBy(ctx, nodeName) {
-  return unique(
-    ctx.rules
-      .filter( rule => rule.node === nodeName)
-      .map( rule => ({rule, dp: 0}))
-  );
+function stateHash(state){
+    return state.snaps.asArray()
+        .map(snap => snapHash(snap))    
+        .toSorted()
+        .join(",")
 }
 
-function ngen(ctx, i) {
-  return unique(i
-    .filter(it => isNode(ctx, it.rule.seq[0]))
-    .flatMap(it => rulesBy(ctx, it.rule.seq[0]))
-  )
-}
+class Parser {
+    constructor() {
+        this.rules = null;
+        this.nodes = null;
+        this.states = null;
+        this.statesI = 0;
+        this.t = null;
+    }
 
-function addIf(to, what){
-  if(to.find(it => it.rule.id === what.rule.id)) {
-    return;
-  }
-  to.push(what);
-}
+    static async #parseRules(rulesFile) {
+        const { default: rules } = await import(`./${rulesFile}`);
+        const rulesList = Object
+            .entries(rules)
+            .flatMap(([node, rules]) => rules
+                .map(rule => ({ node, seq: rule.split(" ") }))
+            );
+        const first = { node: FIRST_NODE, seq: [rulesList[0].node] };
 
-function unique(arr){
-  return [...new Set(arr)];
-}
+        return Bunch.from([first, ...rulesList].map((it, id) => ({ id, ...it })));
+    }
 
-function mergeSets(to, from) {
-  const sizeBefore = to.length;
-  from.forEach( it => addIf(to, it));
-  return to.length - sizeBefore;
-}
+    static async init(rulesFile){
+        const instance = new Parser();
+        instance.rules = await Parser.#parseRules(rulesFile);
+        instance.nodes = instance.rules
+            .map(it => it.node)
+            .unique();
+        instance.states = Bunch.empty();
+        instance.t = [];
+        return instance;
+    }
 
-function convolute(ctx, i) {
-  let d;
-  do {
-    const toAdd = ngen(ctx, i);
-    d = mergeSets(i, toAdd);
-  } while ( d !== 0);
-}
+    isNode(entity) {
+        return this.nodes.has(entity);
+    }
 
-function showDP(r) {
-  const s = [...r.rule.seq];
-  s.splice(r.dp, 0, "[]");
-  return s.join(" ");
-}
+    newState(snaps){
+        const id = this.statesI++;
+        //console.log({id, snaps: snaps.map(snapToString).asArray().join(",")});
+        return { id, snaps };
+    }
 
-function getByDP(ctx, i, dp) {
-  return unique(
-    i.map(r => r.rule.seq[dp])
-  );
-}
+    stateByHash(hash){
+        return this.states.asArray().find( state => hash === stateHash(state));
+    }
 
+    snapsByNode(nodeName) {
+        return this.rules
+            .filter( rule => rule.node === nodeName)
+            .map(rule => ({rule, dp: 0}))
+            .unique();
+    }
 
-function doShift(ctx, ip, e) {
-  const ix = unique(ip
-    .filter( r => e === r.rule.seq[r.dp])
-    .map( r => ({...r, dp: r.dp + 1}))
-  );
-  convolute(ctx, ix);
-  return ix;
-}
+    ngen(snaps) {
+        return snaps
+            .flatMap(snap => this.snapsByNode(snap.rule.seq[snap.dp]).asArray())
+            .unique();
+    }
 
-function doShifts(ctx, ip, dp) {
-  const x0 = getByDP(ctx, ip, dp);
-  const sh = x0.map( x => doShift(ctx, ip, x));
-  return sh;
+    convolute(state) {
+        let size;
+        do {
+            const toAdd = this.ngen(state.snaps);
+            size = state.snaps.merge(toAdd);
+        } while(size !== 0);
+    }
+
+    esByDP(state, dp){
+        return state.snaps.map(snap => snap.rule.seq?.[dp]).filter(Boolean).unique();
+    }
+
+    doShift(state, entity) {
+        // console.log(`C ($${state.id}, ${entity}): `, stateToString(state));
+        const snaps = state.snaps
+            .filter(snap => snap.rule.seq[snap.dp] === entity)
+            .map(snap => ({...snap, dp: snap.dp + 1}))
+            .unique();
+
+        const newState = this.newState(snaps);
+        this.convolute(newState);
+        //this.t.push( {from: stateHash(state), by: entity, to: stateHash(newState)});
+
+        return newState;
+    }
+
+    doShifts(state, dp){
+        const es = this.esByDP(state, dp);
+        const sh = es.map(entity => this.doShift(state, entity));
+        return sh;
+    }
 }
 
 async function main(){
-  parseArgs(settings);
+    parseArgs(settings);
+
+    const parser = await Parser.init(settings.rulesFile);
+    const i0 = parser.newState( Bunch.from( [{rule: parser.rules.at(0), dp: 0}], (el) => snapHash(el)));
+ 
+    parser.convolute(i0);
+
+    let iprev = Bunch.from([i0], state => stateHash(state));
+    parser.states = iprev;
+    let i = 0;
+    do {
+        const inext = iprev.flatMap(it => parser.doShifts(it, i).asArray());
+        const hm = parser.states.merge(inext);
+        if(hm === 0){
+            break;
+        }
+        iprev = inext; 
+        i++;
+    } while (true);
+
+    parser.states = parser.states
+        .filter(state => state.snaps.size())
+        .map( (state, id) => ({...state, id}));
+
+    parser.states
+        .forEach( state => {
+            console.log(`$${state.id}`);
+            console.log( stateToString(state) );
+        });
     
-  const rules = await parseRules(settings.rulesFile);
-    
-  const nodes = unique(rules.map(it => it.node));
-  const states = {};
-  const ctx = {rules, nodes};
-    
-  const toWrite = JSON.stringify({rules, nodes: [...nodes]}, null, 2);
-    
-  await fs.writeFile("rules.txt", toWrite, 'utf-8');
-    
-  const i0 = [{rule: ctx.rules[0], dp:0}];
-  convolute(ctx, i0);
-  console.log(showI(i0));
-  const sh1 = doShifts(ctx, i0, 0);
-  console.log("1", sh1.map(sh => showI(sh)));
-  const sh2 = sh1.map( sh => doShifts(ctx, sh, 1))
-  console.log('2', sh2.flat().map(sh => showI(sh)));
-  const sh3 = sh2.flat().map( sh => doShifts(ctx, sh, 2))
-  console.log("3", sh3.flat().map(sh => showI(sh))); 
-  const sh4 = sh3.flat().map( sh => doShifts(ctx, sh, 3))
-  console.log("4", sh4.flat().map(sh => showI(sh)));     
-    /*
-  fillState(ctx, i0, 0);
-  console.log(showI(i0));
-    
-  const edp = [...getByDP(ctx, i0, 1)];
-    
-  const es = edp.filter(c => isNode(ctx, c));
-  const ep = edp.filter(c => !isNode(ctx, c));
-  es.forEach( e => {
-    const i1 = rulesBy(ctx, e);
-    fillState(ctx, i1, 1);
-    console.log(showI(i1));
-  } );
-    */
-  
+
 }
 
 main();

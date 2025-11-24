@@ -13,12 +13,17 @@
   "range": ["[ value .. value ]"],
   "branch": ["IF ( expr ) lstat", "IF ( expr ) lstat ELSE lstat"],
 }*/
-
+/*
 const rules = {
   "expr": ["expr op val", "( expr )", "u expr", "val"],
   "val": ["ID", "NUM", "STR"],
   "op": ["+", "-", "*", "/"],
   "u": ["-", "!"],
-};
+};*/
+
+const rules = {
+  "E": ["E + T", "T"],
+  "T": ["n", "( E )"],
+}
 
 export default rules;
