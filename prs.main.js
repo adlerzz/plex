@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import Bunch from "./bunch.class.js";
-import {parseArgs} from "./utils.js";
+import {parseArgs, pad} from "./utils.js";
 
 const settings = {
     rulesFile: 'prs.rules.js',
@@ -9,21 +9,23 @@ const settings = {
 };
 
 const FIRST_NODE = "'F";
+const DOT_POINT = "_";
 
 function showDP(snap) {
     const s = [...snap.rule.seq];
-    s.splice(snap.dp, 0, "_");
+    s.splice(snap.dp, 0, DOT_POINT);
     return s.join(" ");
 }
 
 function snapToString(snap){
-    return `#${(snap.rule.id + "").padStart(4, '0')} ${snap.rule.node} : ${showDP(snap)}`;
+    return `  #${pad(snap.rule.id, 4)} [${pad(snap.dp, 2)}] ${snap.rule.node} : ${showDP(snap)}`;
 }
 
 function stateToString(state){
-    return state.snaps.asArray()
+    return `$${state.id}\n` + state.snaps.asArray()
         .toSorted( (s1,s2) => s1.rule.id - s2.rule.id)
-        .map(snap => snapToString(snap));
+        .map(snap => snapToString(snap))
+        .join("\n") + "\n.";
 }
 
 function snapHash(snap){
@@ -42,7 +44,7 @@ class Parser {
         this.rules = null;
         this.nodes = null;
         this.states = null;
-        this.statesI = 0;
+        this.statesCount = 0;
         this.t = null;
     }
 
@@ -73,10 +75,16 @@ class Parser {
         return this.nodes.has(entity);
     }
 
-    newState(snaps){
-        const id = this.statesI++;
-        //console.log({id, snaps: snaps.map(snapToString).asArray().join(",")});
+    instantiateState(snaps){
+        if(snaps.size() === 0){
+            return null;
+        }
+        const id = null; 
         return { id, snaps };
+    }
+
+    assignId(state){
+        state.id = this.statesCount++;
     }
 
     stateByHash(hash){
@@ -88,6 +96,11 @@ class Parser {
             .filter( rule => rule.node === nodeName)
             .map(rule => ({rule, dp: 0}))
             .unique();
+    }
+
+    stateSnapsByEntity(state, entity){
+        return state.snaps
+            .filter(snap => snap.rule.seq.at(snap.dp) === entity)
     }
 
     ngen(snaps) {
@@ -104,28 +117,46 @@ class Parser {
         } while(size !== 0);
     }
 
-    esByDP(state, dp){
-        return state.snaps.map(snap => snap.rule.seq?.[dp]).filter(Boolean).unique();
-    }
-
-    doShift(state, entity) {
-        // console.log(`C ($${state.id}, ${entity}): `, stateToString(state));
-        const snaps = state.snaps
-            .filter(snap => snap.rule.seq[snap.dp] === entity)
-            .map(snap => ({...snap, dp: snap.dp + 1}))
+    static esByState(state){
+        return state.snaps
+            .map(snap => snap.rule.seq?.[snap.dp])
+            .filter(Boolean)
             .unique();
-
-        const newState = this.newState(snaps);
-        this.convolute(newState);
-        //this.t.push( {from: stateHash(state), by: entity, to: stateHash(newState)});
-
-        return newState;
     }
 
-    doShifts(state, dp){
-        const es = this.esByDP(state, dp);
-        const sh = es.map(entity => this.doShift(state, entity));
-        return sh;
+    dotShift(state, entity){
+        const pass = this.stateSnapsByEntity(state, entity);
+        const newSnaps = pass.map(snap => ({...snap, dp: snap.dp + 1}));
+        const iN = this.instantiateState(newSnaps);
+        this.convolute(iN);
+        return iN;
+    }
+
+    buildStates(){
+        const i0 = this.instantiateState( Bunch.from( [{rule: this.rules.first(), dp: 0}], (el) => snapHash(el)));
+        this.convolute(i0);
+        this.assignId(i0);
+
+        this.states = Bunch.from([i0], state => stateHash(state));
+        const statesQueue = Bunch.from([i0], state => stateHash(state));
+
+        while(statesQueue.size() > 0){
+            const fromState = statesQueue.dequeue();
+            const entities = Parser.esByState(fromState);
+
+            entities.forEach(entity => {
+                const newState = this.dotShift(fromState, entity);
+                if(this.states.has(newState) ){
+                    const toState = this.stateByHash(stateHash(newState));
+                    this.t.push({fromState: `$${fromState.id}`, by: entity, toState: `$${toState.id}`})
+                } else {
+                    this.assignId(newState);
+                    this.states.push(newState);
+                    statesQueue.push(newState);
+                    this.t.push({fromState: `$${fromState.id}`, by: entity, toState: `$${newState.id}`});
+                }
+            });
+        }
     }
 }
 
@@ -133,34 +164,15 @@ async function main(){
     parseArgs(settings);
 
     const parser = await Parser.init(settings.rulesFile);
-    const i0 = parser.newState( Bunch.from( [{rule: parser.rules.at(0), dp: 0}], (el) => snapHash(el)));
- 
-    parser.convolute(i0);
+    parser.buildStates();
 
-    let iprev = Bunch.from([i0], state => stateHash(state));
-    parser.states = iprev;
-    let i = 0;
-    do {
-        const inext = iprev.flatMap(it => parser.doShifts(it, i).asArray());
-        const hm = parser.states.merge(inext);
-        if(hm === 0){
-            break;
-        }
-        iprev = inext; 
-        i++;
-    } while (true);
-
-    parser.states = parser.states
-        .filter(state => state.snaps.size())
-        .map( (state, id) => ({...state, id}));
-
+    console.log("States:");
     parser.states
-        .forEach( state => {
-            console.log(`$${state.id}`);
-            console.log( stateToString(state) );
+        .forEach(state => {
+            console.log(stateToString(state));
         });
-    
 
+    console.log(parser.t);
 }
 
 main();

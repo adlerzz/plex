@@ -19,11 +19,19 @@ const rules = {
   "val": ["ID", "NUM", "STR"],
   "op": ["+", "-", "*", "/"],
   "u": ["-", "!"],
-};*/
+};
+*/
 
 const rules = {
   "E": ["E + T", "T"],
   "T": ["n", "( E )"],
 }
+
+/*
+const rules = {
+  "S": ["A A"],
+  "A": ["a A", "b"]
+}
+*/
 
 export default rules;

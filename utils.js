@@ -5,3 +5,7 @@ export function parseArgs(defaultSettings) {
         defaultSettings[param] = value;
     })
 }
+
+export function pad(data, width, filler = '0'){
+    return (data + '').padStart(width, filler);
+}

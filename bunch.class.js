@@ -22,6 +22,10 @@ export default class Bunch {
         return this.data.at(i);
     }
 
+    first(){
+        return this.data.at(0);
+    }
+
     add(element) {
         if(this.data.find(el => this.fhash(element) === this.fhash(el))){
             return;
@@ -30,7 +34,19 @@ export default class Bunch {
     }
 
     has(element) {
-        return this.data.includes(element);
+        return this.data.find( el => this.fhash(el) === this.fhash(element) );
+    }
+
+    push(element) {
+        this.data.push(element);
+    }
+
+    dequeue(){
+        return this.data.shift();
+    }
+
+    pop(){
+        return this.data.pop();
     }
 
     merge(added) {
