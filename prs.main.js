@@ -75,7 +75,7 @@ class Parser {
         return this.nodes.has(entity);
     }
 
-    instantiateState(snaps){
+    static instantiateState(snaps){
         if(snaps.size() === 0){
             return null;
         }
@@ -127,34 +127,41 @@ class Parser {
     dotShift(state, entity){
         const pass = this.stateSnapsByEntity(state, entity);
         const newSnaps = pass.map(snap => ({...snap, dp: snap.dp + 1}));
-        const iN = this.instantiateState(newSnaps);
+        const iN = Parser.instantiateState(newSnaps);
         this.convolute(iN);
         return iN;
     }
 
     buildStates(){
-        const i0 = this.instantiateState( Bunch.from( [{rule: this.rules.first(), dp: 0}], (el) => snapHash(el)));
+        const i0 = Parser.instantiateState( 
+            Bunch.from( [{rule: this.rules.first(), dp: 0}], 
+            (el) => snapHash(el))
+        );
         this.convolute(i0);
         this.assignId(i0);
 
-        this.states = Bunch.from([i0], state => stateHash(state));
-        const statesQueue = Bunch.from([i0], state => stateHash(state));
+        this.states = Bunch.from([i0], stateHash);
+        const statesQueue = Bunch.from([i0], stateHash);
 
         while(statesQueue.size() > 0){
             const fromState = statesQueue.dequeue();
             const entities = Parser.esByState(fromState);
 
             entities.forEach(entity => {
-                const newState = this.dotShift(fromState, entity);
-                if(this.states.has(newState) ){
-                    const toState = this.stateByHash(stateHash(newState));
-                    this.t.push({fromState: `$${fromState.id}`, by: entity, toState: `$${toState.id}`})
+                let toState = this.dotShift(fromState, entity);
+                if(this.states.has(toState) ){
+                    toState = this.stateByHash(stateHash(toState));
                 } else {
-                    this.assignId(newState);
-                    this.states.push(newState);
-                    statesQueue.push(newState);
-                    this.t.push({fromState: `$${fromState.id}`, by: entity, toState: `$${newState.id}`});
+                    this.assignId(toState);
+                    this.states.push(toState);
+                    statesQueue.push(toState);
                 }
+                this.t.push({
+                    from: `$${fromState.id}`, 
+                    by: entity, 
+                    to: `$${toState.id}`, 
+                    sa: this.isNode(entity) ? 'GO' : 'SHIFT'
+                });
             });
         }
     }
