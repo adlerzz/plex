@@ -9,3 +9,5 @@ export function parseArgs(defaultSettings) {
 export function pad(data, width, filler = '0'){
     return (data + '').padStart(width, filler);
 }
+
+export const DOT_POINT = "_";

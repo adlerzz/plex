@@ -1,884 +1,116 @@
 [
   {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
+    "from": "$0",
+    "by": "E",
+    "action": "LEAD",
+    "to": "$1"
   },
   {
-    "type": "ID",
-    "raw": "main",
-    "length": 4,
-    "value": "main"
+    "from": "$0",
+    "by": "T",
+    "action": "LEAD",
+    "to": "$2"
   },
   {
-    "type": "=>>",
-    "raw": "=>>",
-    "length": 3,
-    "value": "=>>"
+    "from": "$0",
+    "by": "<n>",
+    "action": "MOVE",
+    "to": "$3"
   },
   {
-    "type": "{",
-    "raw": "{",
-    "length": 1,
-    "value": "{"
+    "from": "$0",
+    "by": "<(>",
+    "action": "MOVE",
+    "to": "$4"
   },
   {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
+    "from": "$1",
+    "by": "<+>",
+    "action": "MOVE",
+    "to": "$5"
   },
   {
-    "type": "ID",
-    "raw": "s",
-    "length": 1,
-    "value": "s"
+    "from": "$4",
+    "by": "E",
+    "action": "LEAD",
+    "to": "$6"
   },
   {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
+    "from": "$4",
+    "by": "T",
+    "action": "LEAD",
+    "to": "$2"
   },
   {
-    "type": "STRING",
-    "raw": "\"text of \\\"some\\\"\"",
-    "length": 18,
-    "value": "\"text of \\\"some\\\"\""
+    "from": "$4",
+    "by": "<n>",
+    "action": "MOVE",
+    "to": "$3"
   },
   {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
+    "from": "$4",
+    "by": "<(>",
+    "action": "MOVE",
+    "to": "$4"
   },
   {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
+    "from": "$5",
+    "by": "T",
+    "action": "LEAD",
+    "to": "$7"
   },
   {
-    "type": "ID",
-    "raw": "o",
-    "length": 1,
-    "value": "o"
+    "from": "$5",
+    "by": "<n>",
+    "action": "MOVE",
+    "to": "$3"
   },
   {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
+    "from": "$5",
+    "by": "<(>",
+    "action": "MOVE",
+    "to": "$4"
   },
   {
-    "type": "STRING",
-    "raw": "\"another text\"",
-    "length": 14,
-    "value": "\"another text\""
+    "from": "$6",
+    "by": "<)>",
+    "action": "MOVE",
+    "to": "$8"
   },
   {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
+    "from": "$6",
+    "by": "<+>",
+    "action": "MOVE",
+    "to": "$5"
   },
   {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
+    "from": "$1",
+    "by": "<...>",
+    "action": "FOLD",
+    "to": "#0"
   },
   {
-    "type": "ID",
-    "raw": "e",
-    "length": 1,
-    "value": "e"
+    "from": "$2",
+    "by": "<...>",
+    "action": "FOLD",
+    "to": "#2"
   },
   {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
+    "from": "$3",
+    "by": "<...>",
+    "action": "FOLD",
+    "to": "#3"
   },
   {
-    "type": "[",
-    "raw": "[",
-    "length": 1,
-    "value": "["
+    "from": "$7",
+    "by": "<...>",
+    "action": "FOLD",
+    "to": "#1"
   },
   {
-    "type": "STRING",
-    "raw": "\"foo\"",
-    "length": 5,
-    "value": "\"foo\""
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "STRING",
-    "raw": "\"bar\"",
-    "length": 5,
-    "value": "\"bar\""
-  },
-  {
-    "type": "]",
-    "raw": "]",
-    "length": 1,
-    "value": "]"
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
-  },
-  {
-    "type": "ID",
-    "raw": "a",
-    "length": 1,
-    "value": "a"
-  },
-  {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
-  },
-  {
-    "type": "NUM",
-    "raw": "12.3",
-    "length": 4,
-    "value": 12.3
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
-  },
-  {
-    "type": "ID",
-    "raw": "x",
-    "length": 1,
-    "value": "x"
-  },
-  {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
-  },
-  {
-    "type": "HEX",
-    "raw": "0xA450",
-    "length": 6,
-    "value": 42064
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
-  },
-  {
-    "type": "ID",
-    "raw": "ef",
-    "length": 2,
-    "value": "ef"
-  },
-  {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
-  },
-  {
-    "type": "[",
-    "raw": "[",
-    "length": 1,
-    "value": "["
-  },
-  {
-    "type": "NUM",
-    "raw": "1",
-    "length": 1,
-    "value": 1
-  },
-  {
-    "type": "..",
-    "raw": "..",
-    "length": 2,
-    "value": ".."
-  },
-  {
-    "type": "NUM",
-    "raw": "6",
-    "length": 1,
-    "value": 6
-  },
-  {
-    "type": "]",
-    "raw": "]",
-    "length": 1,
-    "value": "]"
-  },
-  {
-    "type": "|>>",
-    "raw": "|>>",
-    "length": 3,
-    "value": "|>>"
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": "+",
-    "raw": "+",
-    "length": 1,
-    "value": "+"
-  },
-  {
-    "type": "NUM",
-    "raw": "1",
-    "length": 1,
-    "value": 1
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
-  },
-  {
-    "type": "ID",
-    "raw": "inc",
-    "length": 3,
-    "value": "inc"
-  },
-  {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "ID",
-    "raw": "value",
-    "length": 5,
-    "value": "value"
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": "=>",
-    "raw": "=>",
-    "length": 2,
-    "value": "=>"
-  },
-  {
-    "type": "ID",
-    "raw": "value",
-    "length": 5,
-    "value": "value"
-  },
-  {
-    "type": "+",
-    "raw": "+",
-    "length": 1,
-    "value": "+"
-  },
-  {
-    "type": "NUM",
-    "raw": "1",
-    "length": 1,
-    "value": 1
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "LINE_COMMENT",
-    "raw": "// the inc = >> _ + 1;",
-    "length": 22,
-    "value": "// the inc = >> _ + 1;"
-  },
-  {
-    "type": "LINE_COMMENT",
-    "raw": "// the ef = [1..6] |> inc;",
-    "length": 26,
-    "value": "// the ef = [1..6] |> inc;"
-  },
-  {
-    "type": "ID",
-    "raw": "console",
-    "length": 7,
-    "value": "console"
-  },
-  {
-    "type": ".",
-    "raw": ".",
-    "length": 1,
-    "value": "."
-  },
-  {
-    "type": "ID",
-    "raw": "log",
-    "length": 3,
-    "value": "log"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "ID",
-    "raw": "ef",
-    "length": 2,
-    "value": "ef"
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
-  },
-  {
-    "type": "ID",
-    "raw": "wat",
-    "length": 3,
-    "value": "wat"
-  },
-  {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
-  },
-  {
-    "type": "[",
-    "raw": "[",
-    "length": 1,
-    "value": "["
-  },
-  {
-    "type": "NUM",
-    "raw": "1",
-    "length": 1,
-    "value": 1
-  },
-  {
-    "type": "..",
-    "raw": "..",
-    "length": 2,
-    "value": ".."
-  },
-  {
-    "type": "NUM",
-    "raw": "10",
-    "length": 2,
-    "value": 10
-  },
-  {
-    "type": "]",
-    "raw": "]",
-    "length": 1,
-    "value": "]"
-  },
-  {
-    "type": "|>>",
-    "raw": "|>>",
-    "length": 3,
-    "value": "|>>"
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": "+",
-    "raw": "+",
-    "length": 1,
-    "value": "+"
-  },
-  {
-    "type": "ID",
-    "raw": "i",
-    "length": 1,
-    "value": "i"
-  },
-  {
-    "type": "|?>",
-    "raw": "|?>",
-    "length": 3,
-    "value": "|?>"
-  },
-  {
-    "type": "ID",
-    "raw": "mod",
-    "length": 3,
-    "value": "mod"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "NUM",
-    "raw": "2",
-    "length": 1,
-    "value": 2
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": "==",
-    "raw": "==",
-    "length": 2,
-    "value": "=="
-  },
-  {
-    "type": "NUM",
-    "raw": "0",
-    "length": 1,
-    "value": 0
-  },
-  {
-    "type": "|<>",
-    "raw": "|<>",
-    "length": 3,
-    "value": "|<>"
-  },
-  {
-    "type": "ID",
-    "raw": "acc",
-    "length": 3,
-    "value": "acc"
-  },
-  {
-    "type": "+",
-    "raw": "+",
-    "length": 1,
-    "value": "+"
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "NUM",
-    "raw": "100",
-    "length": 3,
-    "value": 100
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "THE",
-    "raw": "the",
-    "length": 3,
-    "value": "the"
-  },
-  {
-    "type": "ID",
-    "raw": "noway",
-    "length": 5,
-    "value": "noway"
-  },
-  {
-    "type": "=",
-    "raw": "=",
-    "length": 1,
-    "value": "="
-  },
-  {
-    "type": "ID",
-    "raw": "range",
-    "length": 5,
-    "value": "range"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "NUM",
-    "raw": "1",
-    "length": 1,
-    "value": 1
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "NUM",
-    "raw": "10",
-    "length": 2,
-    "value": 10
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": "|>",
-    "raw": "|>",
-    "length": 2,
-    "value": "|>"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "ID",
-    "raw": "i",
-    "length": 1,
-    "value": "i"
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": "=>",
-    "raw": "=>",
-    "length": 2,
-    "value": "=>"
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": "+",
-    "raw": "+",
-    "length": 1,
-    "value": "+"
-  },
-  {
-    "type": "ID",
-    "raw": "i",
-    "length": 1,
-    "value": "i"
-  },
-  {
-    "type": "|?",
-    "raw": "|?",
-    "length": 2,
-    "value": "|?"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": "=>",
-    "raw": "=>",
-    "length": 2,
-    "value": "=>"
-  },
-  {
-    "type": "ID",
-    "raw": "mod",
-    "length": 3,
-    "value": "mod"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "NUM",
-    "raw": "2",
-    "length": 1,
-    "value": 2
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": "==",
-    "raw": "==",
-    "length": 2,
-    "value": "=="
-  },
-  {
-    "type": "NUM",
-    "raw": "0",
-    "length": 1,
-    "value": 0
-  },
-  {
-    "type": "|",
-    "raw": "|",
-    "length": 1,
-    "value": "|"
-  },
-  {
-    "type": "?",
-    "raw": "<",
-    "length": 1,
-    "value": "<"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": "ID",
-    "raw": "acc",
-    "length": 3,
-    "value": "acc"
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": "=>",
-    "raw": "=>",
-    "length": 2,
-    "value": "=>"
-  },
-  {
-    "type": "ID",
-    "raw": "acc",
-    "length": 3,
-    "value": "acc"
-  },
-  {
-    "type": "+",
-    "raw": "+",
-    "length": 1,
-    "value": "+"
-  },
-  {
-    "type": "ID",
-    "raw": "it",
-    "length": 2,
-    "value": "it"
-  },
-  {
-    "type": ",",
-    "raw": ",",
-    "length": 1,
-    "value": ","
-  },
-  {
-    "type": "NUM",
-    "raw": "100",
-    "length": 3,
-    "value": 100
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
-  },
-  {
-    "type": "}",
-    "raw": "}",
-    "length": 1,
-    "value": "}"
-  },
-  {
-    "type": "ID",
-    "raw": "main",
-    "length": 4,
-    "value": "main"
-  },
-  {
-    "type": "(",
-    "raw": "(",
-    "length": 1,
-    "value": "("
-  },
-  {
-    "type": ")",
-    "raw": ")",
-    "length": 1,
-    "value": ")"
-  },
-  {
-    "type": ";",
-    "raw": ";",
-    "length": 1,
-    "value": ";"
+    "from": "$8",
+    "by": "<...>",
+    "action": "FOLD",
+    "to": "#4"
   }
 ]
