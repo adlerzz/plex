@@ -1,4 +1,3 @@
-import { Rule } from "./rule.class.js"
 import { pad } from "../commons/utils.js";
 import { DOT_POINT } from "../commons/utils.js";
 export class Snap {

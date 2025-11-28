@@ -8,16 +8,16 @@ export class Entity {
         this.isNode = true;
     }
 
-    static FIRST = new Entity("'^", true);
+    static FIRST = new Entity("^^", true);
     static ANY = new Entity("...");
-    static END = new Entity("'$");
+    static END = new Entity("$$");
 
     hash(){
         return this.name;
     }
 
     toString(){
-        return this.isNode ? this.name : `<${this.name}>`;
+        return this.isNode ? `<${this.name}>` : `'${this.name}'`;
     }
 }
 

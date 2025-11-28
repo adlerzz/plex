@@ -1,9 +1,10 @@
 import fs from "node:fs/promises";
+import { writeAsJSON, writeAsText } from "./commons/utils";
 
 const settings = {
-    rulesFile: 'lex.rules.js',
-    inputFile: 'input.txt',
-    outputfile: 'output.json',
+    rulesFile: '../resources/lex.rules.js',
+    inputFile: '../resources/input.txt',
+    outputfile: '../resources/output.json',
 };
 
 function parseArgs(defaultSettings) {
@@ -66,7 +67,6 @@ function tokenize(text, rules) {
             if (!m) {
                 continue;
             }
-            //console.log(m);
             if(m.value !== null){
                 tokens.push(m);
             }
@@ -87,8 +87,10 @@ async function main() {
     const tokens = tokenize(text, extRules);
     
     console.log(tokens);
-    await fs.writeFile(settings.outputfile, JSON.stringify(tokens, null, 2), 'utf-8');
-    await fs.writeFile("tokens.txt", tokens.map(it => `{${it.type}:${it.value}}`).join(""), 'utf-8')
+
+    writeAsJSON(settings.outputfile, tokens);
+    writeAsText("../resources/tokens.txt", tokens.map(it => `{${it.type}:${it.value}}`).join(""))
+
 };
 
 main();

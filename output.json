@@ -1,116 +1,189 @@
-[
-  {
-    "from": "$0",
-    "by": "E",
-    "action": "LEAD",
-    "to": "$1"
-  },
-  {
-    "from": "$0",
-    "by": "T",
-    "action": "LEAD",
-    "to": "$2"
-  },
-  {
-    "from": "$0",
-    "by": "<n>",
-    "action": "MOVE",
-    "to": "$3"
-  },
-  {
-    "from": "$0",
-    "by": "<(>",
-    "action": "MOVE",
-    "to": "$4"
-  },
-  {
-    "from": "$1",
-    "by": "<+>",
-    "action": "MOVE",
-    "to": "$5"
-  },
-  {
-    "from": "$4",
-    "by": "E",
-    "action": "LEAD",
-    "to": "$6"
-  },
-  {
-    "from": "$4",
-    "by": "T",
-    "action": "LEAD",
-    "to": "$2"
-  },
-  {
-    "from": "$4",
-    "by": "<n>",
-    "action": "MOVE",
-    "to": "$3"
-  },
-  {
-    "from": "$4",
-    "by": "<(>",
-    "action": "MOVE",
-    "to": "$4"
-  },
-  {
-    "from": "$5",
-    "by": "T",
-    "action": "LEAD",
-    "to": "$7"
-  },
-  {
-    "from": "$5",
-    "by": "<n>",
-    "action": "MOVE",
-    "to": "$3"
-  },
-  {
-    "from": "$5",
-    "by": "<(>",
-    "action": "MOVE",
-    "to": "$4"
-  },
-  {
-    "from": "$6",
-    "by": "<)>",
-    "action": "MOVE",
-    "to": "$8"
-  },
-  {
-    "from": "$6",
-    "by": "<+>",
-    "action": "MOVE",
-    "to": "$5"
-  },
-  {
-    "from": "$1",
-    "by": "<...>",
-    "action": "FOLD",
-    "to": "#0"
-  },
-  {
-    "from": "$2",
-    "by": "<...>",
-    "action": "FOLD",
-    "to": "#2"
-  },
-  {
-    "from": "$3",
-    "by": "<...>",
-    "action": "FOLD",
-    "to": "#3"
-  },
-  {
-    "from": "$7",
-    "by": "<...>",
-    "action": "FOLD",
-    "to": "#1"
-  },
-  {
-    "from": "$8",
-    "by": "<...>",
-    "action": "FOLD",
-    "to": "#4"
-  }
-]
+{
+  "entities": [
+    {
+      "name": "^^",
+      "isNode": true
+    },
+    {
+      "name": "E",
+      "isNode": true
+    },
+    {
+      "name": "+",
+      "isNode": false
+    },
+    {
+      "name": "T",
+      "isNode": true
+    },
+    {
+      "name": "n",
+      "isNode": false
+    },
+    {
+      "name": "(",
+      "isNode": false
+    },
+    {
+      "name": ")",
+      "isNode": false
+    }
+  ],
+  "rule": [
+    {
+      "id": 0,
+      "node": "^^",
+      "seq": [
+        "E"
+      ]
+    },
+    {
+      "id": 1,
+      "node": "E",
+      "seq": [
+        "E",
+        "+",
+        "T"
+      ]
+    },
+    {
+      "id": 2,
+      "node": "E",
+      "seq": [
+        "T"
+      ]
+    },
+    {
+      "id": 3,
+      "node": "T",
+      "seq": [
+        "n"
+      ]
+    },
+    {
+      "id": 4,
+      "node": "T",
+      "seq": [
+        "(",
+        "E",
+        ")"
+      ]
+    }
+  ],
+  "table": [
+    {
+      "from": 0,
+      "by": "<E>",
+      "to": 1,
+      "sa": "LEAD"
+    },
+    {
+      "from": 0,
+      "by": "<T>",
+      "to": 2,
+      "sa": "LEAD"
+    },
+    {
+      "from": 0,
+      "by": "'n'",
+      "to": 3,
+      "sa": "MOVE"
+    },
+    {
+      "from": 0,
+      "by": "'('",
+      "to": 4,
+      "sa": "MOVE"
+    },
+    {
+      "from": 1,
+      "by": "'+'",
+      "to": 5,
+      "sa": "MOVE"
+    },
+    {
+      "from": 4,
+      "by": "<E>",
+      "to": 6,
+      "sa": "LEAD"
+    },
+    {
+      "from": 4,
+      "by": "<T>",
+      "to": 2,
+      "sa": "LEAD"
+    },
+    {
+      "from": 4,
+      "by": "'n'",
+      "to": 3,
+      "sa": "MOVE"
+    },
+    {
+      "from": 4,
+      "by": "'('",
+      "to": 4,
+      "sa": "MOVE"
+    },
+    {
+      "from": 5,
+      "by": "<T>",
+      "to": 7,
+      "sa": "LEAD"
+    },
+    {
+      "from": 5,
+      "by": "'n'",
+      "to": 3,
+      "sa": "MOVE"
+    },
+    {
+      "from": 5,
+      "by": "'('",
+      "to": 4,
+      "sa": "MOVE"
+    },
+    {
+      "from": 6,
+      "by": "')'",
+      "to": 8,
+      "sa": "MOVE"
+    },
+    {
+      "from": 6,
+      "by": "'+'",
+      "to": 5,
+      "sa": "MOVE"
+    },
+    {
+      "from": 1,
+      "by": "'...'",
+      "to": 0,
+      "sa": "FOLD"
+    },
+    {
+      "from": 2,
+      "by": "'...'",
+      "to": 2,
+      "sa": "FOLD"
+    },
+    {
+      "from": 3,
+      "by": "'...'",
+      "to": 3,
+      "sa": "FOLD"
+    },
+    {
+      "from": 7,
+      "by": "'...'",
+      "to": 1,
+      "sa": "FOLD"
+    },
+    {
+      "from": 8,
+      "by": "'...'",
+      "to": 4,
+      "sa": "FOLD"
+    }
+  ]
+}
