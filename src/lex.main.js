@@ -1,10 +1,14 @@
-import fs from "node:fs/promises";
-import { writeAsJSON, writeAsText } from "./commons/utils";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { readAsText, writeAsJSON, writeAsText } from './commons/filesys.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const settings = {
-    rulesFile: '../resources/lex.rules.js',
-    inputFile: '../resources/input.txt',
-    outputfile: '../resources/output.json',
+    rulesFile: 'lex.rules.js',
+    inputFile: 'lex.input.txt',
+    outputfile: 'lex.output.json',
 };
 
 function parseArgs(defaultSettings) {
@@ -49,7 +53,7 @@ function match(text, rule) {
 }
 
 async function parseRules(rulesFile){
-    const {default: rules} = await import(`./${rulesFile}`);
+    const {default: rules} = await import(`../resources/${rulesFile}`);
     return Object.entries(rules).map( ([type, value]) => ({
         type,
         re: isRegExp(value) ? value : (isArray(value) && isRegExp(value[0]) ? value[0]: null),
@@ -78,18 +82,20 @@ function tokenize(text, rules) {
 }
 
 async function main() {
+
+    console.log(__dirname);
     parseArgs(settings);
 
     const extRules = await parseRules(settings.rulesFile);
     console.log(extRules);
 
-    const text = await fs.readFile(settings.inputFile, 'utf-8');
+    const text = await readAsText(settings.inputFile, 'utf-8');
     const tokens = tokenize(text, extRules);
     
     console.log(tokens);
 
     writeAsJSON(settings.outputfile, tokens);
-    writeAsText("../resources/tokens.txt", tokens.map(it => `{${it.type}:${it.value}}`).join(""))
+    writeAsText("lex.tokens.txt", tokens.map(it => `{${it.type}:${it.value}}`).join(""))
 
 };
 

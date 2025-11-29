@@ -3,7 +3,8 @@ import { Entity } from "./models/entity.class.js";
 import { Rule } from "./models/rule.class.js";
 import { Snap } from "./models/snap.class.js";
 import { State } from "./models/state.class.js";
-import { parseArgs, writeAsJSON } from "./commons/utils.js";
+import { parseArgs } from "./commons/utils.js";
+import { writeAsJSON } from "./commons/filesys.js";
 
 const settings = {
     rulesFile: '../resources/prs.rules.js',
