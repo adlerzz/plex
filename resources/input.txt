@@ -1,0 +1,10 @@
+[
+    {token: "(", value: "("},
+    {token: "n", value: "12"},
+    {token: "+", value: "+"},
+    {token: "n", value: "45"},
+    {token: ")", value: ")"},
+    {token: "+", value: "+"},
+    {token: "n", value: "90"},
+]
+(n+n)+n

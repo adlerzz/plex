@@ -9,7 +9,7 @@ import { writeAsJSON } from "./commons/filesys.js";
 const settings = {
     rulesFile: '../resources/prs.rules.js',
     inputFile: '../resources/input.txt',
-    outputfile: '../resources/output.json',
+    outputfile: '../resources/prs.output.json',
 };
 
 const Action = {
@@ -126,7 +126,7 @@ class Parser {
                 }
                 this.table.push({
                     from: fromState.id,
-                    by: entity.toString(),
+                    by: entity.name,
                     to: toState.id,
                     sa: entity.isNode ? Action.LEAD : Action.MOVE
                 });
@@ -138,7 +138,7 @@ class Parser {
             .forEach(snap => {
                 this.table.push({
                     from: state.id,
-                    by: Entity.ANY.toString(),
+                    by: Entity.ANY.name,
                     to: snap.rule.id,
                     sa: Action.FOLD
                 })
@@ -149,7 +149,7 @@ class Parser {
     get json() {
         return {
             entities: this.entities.asArray(),
-            rule: this.rules.map(({id, node, seq}) => ({id, node: node.name, seq: seq.map(e => e.name) })).asArray(),
+            rules: this.rules.map(({id, node, seq}) => ({id, node: node.name, seq: seq.map(e => e.name) })).asArray(),
             table: this.table,
         }
     }

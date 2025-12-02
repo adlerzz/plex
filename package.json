@@ -4,6 +4,7 @@
 
     "scripts": {
         "start:lex": "node ./src/lex.main.js",
-        "start:prs": "node ./src/prs.main.js"
+        "start:prs": "node ./src/prs.main.js",
+        "start:kon": "node ./src/kon.main.js"
     }
 }
