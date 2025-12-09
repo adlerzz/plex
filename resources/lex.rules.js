@@ -1,8 +1,8 @@
-const q = (...types) => Object.fromEntries(types.map(type => [type, type]))
+/*const q = (...types) => Object.fromEntries(types.map(type => [type, type]))
 const Q = (...types) => Object.fromEntries(types.map(type => [type, type.toLowerCase()]))
 
 const rules = {
-    "LINE_COMMENT": /\/\/.*/,
+    "LINE_COMMENT": /\/\/.* /,
     "BLOCK_COMMENT": /\/\*.*\*\//,
     "STRING": /\"([^\\]|\\["\r\n])*?\"/,
     
@@ -10,7 +10,7 @@ const rules = {
         "BREAK", "CONTINUE", "NULL", "IMPORT", "EXPORT",
         "RETURN"),
     
-    "ID": /[_$@#A-Za-z][_$@#A-Za-z0-9]*/,
+    "ID": /[_$@#A-Za-z][_$@#A-Za-z0-9]* /,
     
     ...q("|>>",  "|?>", "|<>"),
     ...q("+=", "-=", "*=", "/="),
@@ -36,5 +36,13 @@ const rules = {
 
     "?": /.|\r|\n/,
 };
+*/
 
+const rules = {
+    "(": "(",
+    ")": ")",
+    "+": "+",
+    "-": "-",
+    "n": [/-?\d+(\.\d+)?/, (s) => parseFloat(s) ],
+};
 export default rules;

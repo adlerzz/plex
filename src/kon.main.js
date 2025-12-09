@@ -1,18 +1,16 @@
-import { readAsJSON, readAsText } from "./commons/filesys.js";
+import { readAsJSON,  writeAsText } from "./commons/filesys.js";
 import { parseArgs } from "./commons/utils.js";
-import { Entity } from "./models/entity.class.js";
 
 const settings = {
-    parserFile: '../resources/prs.output.json',
-    inputFile: '../resources/tokens.json',
-    outputfile: '../resources/prs.output.json',
+    parserFile: 'prs.output.json',
+    tokensFile: 'lex.output.json',
+    outputfile: 'output.text',
 };
 
 async function main() {
     parseArgs(settings);
 
     const parser = await readAsJSON(settings.parserFile);
-    // const entities = Object.fromEntries(parser.entities.map( ({name, isNode}) => ([name, isNode])));
     const p = parser.table.map( ({from, by, to, sa}) => {
 
         console.log(`${from} ${by} ${sa} ${to}`);
@@ -26,13 +24,13 @@ async function main() {
     const states = [0];
     const tokens = [];
     
-    const input = await readAsJSON(settings.inputFile);
+    const input = await readAsJSON(settings.tokensFile);
     let i = 0;
 
     do{
         const s = states.at(-1);
         const c = input.at(i);        
-        const [action, to] = a[`${s} ${c?.token}`] ?? a[`${s} ...`];
+        const [action, to] = a[`${s} ${c?.type}`] ?? a[`${s} ...`];
 
         if(action === 'FOLD' && to === 0){
             console.log("accept");
@@ -54,21 +52,34 @@ async function main() {
 
             case 'FOLD': {
                 const rule = parser.rules[to];
-                const fold = [];
+                const foldArgs = [];
                 rule.seq.forEach(() => {
                     states.pop();
-                    fold.push(tokens.pop());
+                    foldArgs.push(tokens.pop());
                 });
                 const [, pto] = a[`${states.at(-1)} ${rule.node}`];
-                tokens.push({token: rule.node, value: fold.map( ({value}) => value).join(", ") });
+                const fold = rule.fold 
+                    ? parseFold(rule.fold) 
+                    : defaultFold;
+                foldArgs.reverse();
+                tokens.push({token: rule.node, value: fold(foldArgs) });
+                console.log("newValue", foldArgs, ">>",  fold(foldArgs));
                 states.push(pto);
             }
         }
         console.log({states, tokens});
         
     }while(states.length > 1);
+
+    writeAsText(settings.outputfile, tokens.at(0).value.toString());
 }
 
+function parseFold(foldRule){
+    return new Function("$rawfoldargs$", "const $values$ = $rawfoldargs$.map($rawfoldarg$ => $rawfoldarg$.value); return (" + foldRule + ")($values$, $rawfoldargs$)");
+}
 
+function defaultFold(foldArgs) {
+    return foldArgs.map(foldArg => foldArg.value);
+}
 
 main();

@@ -9,8 +9,8 @@
       "isNode": true
     },
     {
-      "name": "+",
-      "isNode": false
+      "name": "O",
+      "isNode": true
     },
     {
       "name": "T",
@@ -27,6 +27,14 @@
     {
       "name": ")",
       "isNode": false
+    },
+    {
+      "name": "+",
+      "isNode": false
+    },
+    {
+      "name": "-",
+      "isNode": false
     }
   ],
   "rules": [
@@ -42,23 +50,26 @@
       "node": "E",
       "seq": [
         "E",
-        "+",
+        "O",
         "T"
-      ]
+      ],
+      "fold": "$ => ({'$sum': (a,b) => a+b, '$sub': (a,b) => a-b}[$[1]])($[0], $[2])"
     },
     {
       "id": 2,
       "node": "E",
       "seq": [
         "T"
-      ]
+      ],
+      "fold": "$ => $[0]"
     },
     {
       "id": 3,
       "node": "T",
       "seq": [
         "n"
-      ]
+      ],
+      "fold": "$ => $[0]"
     },
     {
       "id": 4,
@@ -67,7 +78,24 @@
         "(",
         "E",
         ")"
-      ]
+      ],
+      "fold": "$ => $[1]"
+    },
+    {
+      "id": 5,
+      "node": "O",
+      "seq": [
+        "+"
+      ],
+      "fold": "$ => \"$sum\""
+    },
+    {
+      "id": 6,
+      "node": "O",
+      "seq": [
+        "-"
+      ],
+      "fold": "$ => \"$sub\""
     }
   ],
   "table": [
@@ -97,14 +125,26 @@
     },
     {
       "from": 1,
-      "by": "+",
+      "by": "O",
       "to": 5,
+      "sa": "LEAD"
+    },
+    {
+      "from": 1,
+      "by": "+",
+      "to": 6,
+      "sa": "MOVE"
+    },
+    {
+      "from": 1,
+      "by": "-",
+      "to": 7,
       "sa": "MOVE"
     },
     {
       "from": 4,
       "by": "E",
-      "to": 6,
+      "to": 8,
       "sa": "LEAD"
     },
     {
@@ -128,7 +168,7 @@
     {
       "from": 5,
       "by": "T",
-      "to": 7,
+      "to": 9,
       "sa": "LEAD"
     },
     {
@@ -144,15 +184,27 @@
       "sa": "MOVE"
     },
     {
-      "from": 6,
+      "from": 8,
       "by": ")",
-      "to": 8,
+      "to": 10,
       "sa": "MOVE"
     },
     {
-      "from": 6,
-      "by": "+",
+      "from": 8,
+      "by": "O",
       "to": 5,
+      "sa": "LEAD"
+    },
+    {
+      "from": 8,
+      "by": "+",
+      "to": 6,
+      "sa": "MOVE"
+    },
+    {
+      "from": 8,
+      "by": "-",
+      "to": 7,
       "sa": "MOVE"
     },
     {
@@ -174,13 +226,25 @@
       "sa": "FOLD"
     },
     {
+      "from": 6,
+      "by": "...",
+      "to": 5,
+      "sa": "FOLD"
+    },
+    {
       "from": 7,
+      "by": "...",
+      "to": 6,
+      "sa": "FOLD"
+    },
+    {
+      "from": 9,
       "by": "...",
       "to": 1,
       "sa": "FOLD"
     },
     {
-      "from": 8,
+      "from": 10,
       "by": "...",
       "to": 4,
       "sa": "FOLD"

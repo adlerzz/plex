@@ -1,4 +1,4 @@
-import fs from "node:fs/promises";
+export const same = _ => _;
 
 export function parseArgs(defaultSettings) {
     process.argv.forEach(part => {

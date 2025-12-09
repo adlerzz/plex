@@ -1,9 +1,9 @@
-import {Entity} from "./entity.class.js";
 export class Rule {
-    constructor(id, node, seq){
+    constructor(id, node, seq, fold){
         this.id = id;
         this.node = node;
         this.seq = seq;
+        this.fold = fold
     }
 
     hash(){

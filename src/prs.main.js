@@ -4,12 +4,12 @@ import { Rule } from "./models/rule.class.js";
 import { Snap } from "./models/snap.class.js";
 import { State } from "./models/state.class.js";
 import { parseArgs } from "./commons/utils.js";
-import { writeAsJSON } from "./commons/filesys.js";
+import { importDefault, writeAsJSON } from "./commons/filesys.js";
 
 const settings = {
-    rulesFile: '../resources/prs.rules.js',
+    rulesFile: 'prs.rules.js',
     inputFile: '../resources/input.txt',
-    outputfile: '../resources/prs.output.json',
+    outputfile: 'prs.output.json',
 };
 
 const Action = {
@@ -29,11 +29,19 @@ class Parser {
     }
 
     async parseRules(rulesFile) {
-        const { default: rules } = await import(`./${rulesFile}`);
+        const rules = await importDefault(rulesFile);
         const rulesList = Object
             .entries(rules)
             .flatMap(([node, rules]) => rules
-                .map(rule => ({ node, seq: rule.split(" ") }))
+                .map(rule => {
+                    if(typeof rule === 'string'){
+                        return ({ node, seq: rule.split(" ") });    
+                    } else {
+                        const [seq, fold] = Object.entries(rule)?.[0];
+                        return {node, seq: seq.split(" "), fold}
+                    }
+                    
+                })
             );
         const firstRule = { node: Entity.FIRST.name, seq: [rulesList[0].node] };
 
@@ -42,8 +50,8 @@ class Parser {
             .map(e => new Entity(e)));
 
         const enumed = [firstRule, ...rulesList]
-            .map(({ node, seq }, id) =>
-                new Rule(id, this.entities.findByHash(node), seq.map(e => this.entities.findByHash(e)))
+            .map(({ node, seq, fold }, id) =>
+                new Rule(id, this.entities.findByHash(node), seq.map(e => this.entities.findByHash(e)), fold)
             );
         this.rules.push(...enumed);
     }
@@ -149,7 +157,7 @@ class Parser {
     get json() {
         return {
             entities: this.entities.asArray(),
-            rules: this.rules.map(({id, node, seq}) => ({id, node: node.name, seq: seq.map(e => e.name) })).asArray(),
+            rules: this.rules.map(({id, node, seq, fold}) => ({id, node: node.name, seq: seq.map(e => e.name), ...{fold: fold?.toString()} })).asArray(),
             table: this.table,
         }
     }
