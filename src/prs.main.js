@@ -3,7 +3,7 @@ import { Entity } from "./models/entity.class.js";
 import { Rule } from "./models/rule.class.js";
 import { Snap } from "./models/snap.class.js";
 import { State } from "./models/state.class.js";
-import { parseArgs } from "./commons/utils.js";
+import { parseArgs, splitByBlanks } from "./commons/utils.js";
 import { importDefault, writeAsJSON } from "./commons/filesys.js";
 
 const settings = {
@@ -35,23 +35,23 @@ class Parser {
             .flatMap(([node, rules]) => rules
                 .map(rule => {
                     if(typeof rule === 'string'){
-                        return ({ node, seq: rule.split(" ") });    
+                        return ({ node, seq: splitByBlanks(rule) });    
                     } else {
                         const [seq, fold] = Object.entries(rule)?.[0];
-                        return {node, seq: seq.split(" "), fold}
+                        return {node, seq: splitByBlanks(seq), fold}
                     }
                     
                 })
             );
         const firstRule = { node: Entity.FIRST.name, seq: [rulesList[0].node] };
 
-        this.entities.add(...[firstRule, ...rulesList]
+        this.entities.add(Entity.EMPTY, ...[firstRule, ...rulesList]
             .flatMap(({ node, seq }) => [node, ...seq])
             .map(e => new Entity(e)));
 
         const enumed = [firstRule, ...rulesList]
             .map(({ node, seq, fold }, id) =>
-                new Rule(id, this.entities.findByHash(node), seq.map(e => this.entities.findByHash(e)), fold)
+                new Rule(id, this.entities.findByHash(node), seq.map(e => this.entities.findByHash(e)).filter(e => e !== Entity.EMPTY), fold)
             );
         this.rules.push(...enumed);
     }
@@ -64,6 +64,10 @@ class Parser {
                 e.markAsNode();
                 this.nodes.add(e);
             });
+        writeAsJSON(
+            "rules.json", 
+            this.rules.map( rule => rule.toString() )
+        );
     }
 
     static async init(rulesFile) {

@@ -1,5 +1,6 @@
 import { readAsJSON,  writeAsText } from "./commons/filesys.js";
 import { parseArgs } from "./commons/utils.js";
+import { def } from "../resources/prs.rules.js";
 
 const settings = {
     parserFile: 'prs.output.json',
@@ -62,8 +63,7 @@ async function main() {
                     ? parseFold(rule.fold) 
                     : defaultFold;
                 foldArgs.reverse();
-                tokens.push({token: rule.node, value: fold(foldArgs) });
-                console.log("newValue", foldArgs, ">>",  fold(foldArgs));
+                tokens.push({token: rule.node, value: fold(foldArgs, def) });
                 states.push(pto);
             }
         }
@@ -75,10 +75,13 @@ async function main() {
 }
 
 function parseFold(foldRule){
-    return new Function("$rawfoldargs$", "const $values$ = $rawfoldargs$.map($rawfoldarg$ => $rawfoldarg$.value); return (" + foldRule + ")($values$, $rawfoldargs$)");
+    return new Function("$rawfoldargs$", "def", `
+        const $values$ = $rawfoldargs$.map($rawfoldarg$ => $rawfoldarg$.value); 
+        return ( ${foldRule} )($values$, $rawfoldargs$)`
+    );
 }
 
-function defaultFold(foldArgs) {
+function defaultFold(foldArgs, _) {
     return foldArgs.map(foldArg => foldArg.value);
 }
 

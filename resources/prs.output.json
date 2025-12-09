@@ -1,23 +1,47 @@
 {
   "entities": [
     {
+      "name": "$$",
+      "isNode": false
+    },
+    {
       "name": "^^",
       "isNode": true
     },
     {
-      "name": "E",
+      "name": "Expr",
       "isNode": true
     },
     {
-      "name": "O",
+      "name": "Ex1",
       "isNode": true
     },
     {
-      "name": "T",
+      "name": "TailEx2",
       "isNode": true
     },
     {
-      "name": "n",
+      "name": "BiOp2",
+      "isNode": true
+    },
+    {
+      "name": "PartEx",
+      "isNode": true
+    },
+    {
+      "name": "TailEx1",
+      "isNode": true
+    },
+    {
+      "name": "BiOp1",
+      "isNode": true
+    },
+    {
+      "name": "Unary",
+      "isNode": true
+    },
+    {
+      "name": "NUM",
       "isNode": false
     },
     {
@@ -29,11 +53,23 @@
       "isNode": false
     },
     {
+      "name": "-",
+      "isNode": false
+    },
+    {
+      "name": "!",
+      "isNode": false
+    },
+    {
       "name": "+",
       "isNode": false
     },
     {
-      "name": "-",
+      "name": "*",
+      "isNode": false
+    },
+    {
+      "name": "/",
       "isNode": false
     }
   ],
@@ -42,170 +78,429 @@
       "id": 0,
       "node": "^^",
       "seq": [
-        "E"
+        "Expr"
       ]
     },
     {
       "id": 1,
-      "node": "E",
+      "node": "Expr",
       "seq": [
-        "E",
-        "O",
-        "T"
+        "Ex1",
+        "TailEx2"
       ],
-      "fold": "$ => ({'$sum': (a,b) => a+b, '$sub': (a,b) => a-b}[$[1]])($[0], $[2])"
+      "fold": "$ => def.denseJoin($)"
     },
     {
       "id": 2,
-      "node": "E",
+      "node": "TailEx2",
       "seq": [
-        "T"
+        "BiOp2",
+        "Ex1",
+        "TailEx2"
       ],
-      "fold": "$ => $[0]"
+      "fold": "$ => def.denseJoin([$[1], $[2], $[0]])"
     },
     {
       "id": 3,
-      "node": "T",
-      "seq": [
-        "n"
-      ],
-      "fold": "$ => $[0]"
+      "node": "TailEx2",
+      "seq": [],
+      "fold": "$ => \"\""
     },
     {
       "id": 4,
-      "node": "T",
+      "node": "Ex1",
+      "seq": [
+        "PartEx",
+        "TailEx1"
+      ],
+      "fold": "$ => def.denseJoin($)"
+    },
+    {
+      "id": 5,
+      "node": "TailEx1",
+      "seq": [
+        "BiOp1",
+        "PartEx",
+        "TailEx1"
+      ],
+      "fold": "$ => def.denseJoin([$[1], $[2], $[0]])"
+    },
+    {
+      "id": 6,
+      "node": "TailEx1",
+      "seq": [],
+      "fold": "$ => \"\""
+    },
+    {
+      "id": 7,
+      "node": "PartEx",
+      "seq": [
+        "Unary",
+        "NUM"
+      ],
+      "fold": "$ => {\r\n      const res = `s_push_1 ${$[1]}`\r\n      const op = $[0] === \"\" ? \"\": \"\\n\" + $[0];\r\n      return res + op;\r\n    }"
+    },
+    {
+      "id": 8,
+      "node": "PartEx",
       "seq": [
         "(",
-        "E",
+        "Expr",
         ")"
       ],
       "fold": "$ => $[1]"
     },
     {
-      "id": 5,
-      "node": "O",
-      "seq": [
-        "+"
-      ],
-      "fold": "$ => \"$sum\""
-    },
-    {
-      "id": 6,
-      "node": "O",
+      "id": 9,
+      "node": "Unary",
       "seq": [
         "-"
       ],
-      "fold": "$ => \"$sub\""
+      "fold": "$ => \"s_neg_1\""
+    },
+    {
+      "id": 10,
+      "node": "Unary",
+      "seq": [
+        "!"
+      ],
+      "fold": "$ => \"s_not_1\""
+    },
+    {
+      "id": 11,
+      "node": "Unary",
+      "seq": [
+        "+"
+      ],
+      "fold": "$ => \"\""
+    },
+    {
+      "id": 12,
+      "node": "Unary",
+      "seq": [],
+      "fold": "$ => \"\""
+    },
+    {
+      "id": 13,
+      "node": "BiOp1",
+      "seq": [
+        "*"
+      ],
+      "fold": "$ => \"s_mul_2\""
+    },
+    {
+      "id": 14,
+      "node": "BiOp1",
+      "seq": [
+        "/"
+      ],
+      "fold": "$ => \"s_div_2\""
+    },
+    {
+      "id": 15,
+      "node": "BiOp2",
+      "seq": [
+        "+"
+      ],
+      "fold": "$ => \"s_add_2\""
+    },
+    {
+      "id": 16,
+      "node": "BiOp2",
+      "seq": [
+        "-"
+      ],
+      "fold": "$ => \"s_sub_2\""
     }
   ],
   "table": [
     {
       "from": 0,
-      "by": "E",
+      "by": "Expr",
       "to": 1,
       "sa": "LEAD"
     },
     {
       "from": 0,
-      "by": "T",
+      "by": "Ex1",
       "to": 2,
       "sa": "LEAD"
     },
     {
       "from": 0,
-      "by": "n",
+      "by": "PartEx",
       "to": 3,
-      "sa": "MOVE"
+      "sa": "LEAD"
+    },
+    {
+      "from": 0,
+      "by": "Unary",
+      "to": 4,
+      "sa": "LEAD"
     },
     {
       "from": 0,
       "by": "(",
-      "to": 4,
+      "to": 5,
       "sa": "MOVE"
     },
     {
-      "from": 1,
-      "by": "O",
-      "to": 5,
-      "sa": "LEAD"
-    },
-    {
-      "from": 1,
-      "by": "+",
+      "from": 0,
+      "by": "-",
       "to": 6,
       "sa": "MOVE"
     },
     {
-      "from": 1,
-      "by": "-",
+      "from": 0,
+      "by": "!",
       "to": 7,
       "sa": "MOVE"
     },
     {
-      "from": 4,
-      "by": "E",
+      "from": 0,
+      "by": "+",
       "to": 8,
-      "sa": "LEAD"
-    },
-    {
-      "from": 4,
-      "by": "T",
-      "to": 2,
-      "sa": "LEAD"
-    },
-    {
-      "from": 4,
-      "by": "n",
-      "to": 3,
       "sa": "MOVE"
     },
     {
-      "from": 4,
-      "by": "(",
-      "to": 4,
-      "sa": "MOVE"
-    },
-    {
-      "from": 5,
-      "by": "T",
+      "from": 2,
+      "by": "TailEx2",
       "to": 9,
       "sa": "LEAD"
     },
     {
-      "from": 5,
-      "by": "n",
-      "to": 3,
+      "from": 2,
+      "by": "BiOp2",
+      "to": 10,
+      "sa": "LEAD"
+    },
+    {
+      "from": 2,
+      "by": "+",
+      "to": 11,
       "sa": "MOVE"
+    },
+    {
+      "from": 2,
+      "by": "-",
+      "to": 12,
+      "sa": "MOVE"
+    },
+    {
+      "from": 3,
+      "by": "TailEx1",
+      "to": 13,
+      "sa": "LEAD"
+    },
+    {
+      "from": 3,
+      "by": "BiOp1",
+      "to": 14,
+      "sa": "LEAD"
+    },
+    {
+      "from": 3,
+      "by": "*",
+      "to": 15,
+      "sa": "MOVE"
+    },
+    {
+      "from": 3,
+      "by": "/",
+      "to": 16,
+      "sa": "MOVE"
+    },
+    {
+      "from": 4,
+      "by": "NUM",
+      "to": 17,
+      "sa": "MOVE"
+    },
+    {
+      "from": 5,
+      "by": "Expr",
+      "to": 18,
+      "sa": "LEAD"
+    },
+    {
+      "from": 5,
+      "by": "Ex1",
+      "to": 2,
+      "sa": "LEAD"
+    },
+    {
+      "from": 5,
+      "by": "PartEx",
+      "to": 3,
+      "sa": "LEAD"
+    },
+    {
+      "from": 5,
+      "by": "Unary",
+      "to": 4,
+      "sa": "LEAD"
     },
     {
       "from": 5,
       "by": "(",
-      "to": 4,
-      "sa": "MOVE"
-    },
-    {
-      "from": 8,
-      "by": ")",
-      "to": 10,
-      "sa": "MOVE"
-    },
-    {
-      "from": 8,
-      "by": "O",
       "to": 5,
-      "sa": "LEAD"
+      "sa": "MOVE"
     },
     {
-      "from": 8,
-      "by": "+",
+      "from": 5,
+      "by": "-",
       "to": 6,
       "sa": "MOVE"
     },
     {
-      "from": 8,
-      "by": "-",
+      "from": 5,
+      "by": "!",
       "to": 7,
       "sa": "MOVE"
+    },
+    {
+      "from": 5,
+      "by": "+",
+      "to": 8,
+      "sa": "MOVE"
+    },
+    {
+      "from": 10,
+      "by": "Ex1",
+      "to": 19,
+      "sa": "LEAD"
+    },
+    {
+      "from": 10,
+      "by": "PartEx",
+      "to": 3,
+      "sa": "LEAD"
+    },
+    {
+      "from": 10,
+      "by": "Unary",
+      "to": 4,
+      "sa": "LEAD"
+    },
+    {
+      "from": 10,
+      "by": "(",
+      "to": 5,
+      "sa": "MOVE"
+    },
+    {
+      "from": 10,
+      "by": "-",
+      "to": 6,
+      "sa": "MOVE"
+    },
+    {
+      "from": 10,
+      "by": "!",
+      "to": 7,
+      "sa": "MOVE"
+    },
+    {
+      "from": 10,
+      "by": "+",
+      "to": 8,
+      "sa": "MOVE"
+    },
+    {
+      "from": 14,
+      "by": "PartEx",
+      "to": 20,
+      "sa": "LEAD"
+    },
+    {
+      "from": 14,
+      "by": "Unary",
+      "to": 4,
+      "sa": "LEAD"
+    },
+    {
+      "from": 14,
+      "by": "(",
+      "to": 5,
+      "sa": "MOVE"
+    },
+    {
+      "from": 14,
+      "by": "-",
+      "to": 6,
+      "sa": "MOVE"
+    },
+    {
+      "from": 14,
+      "by": "!",
+      "to": 7,
+      "sa": "MOVE"
+    },
+    {
+      "from": 14,
+      "by": "+",
+      "to": 8,
+      "sa": "MOVE"
+    },
+    {
+      "from": 18,
+      "by": ")",
+      "to": 21,
+      "sa": "MOVE"
+    },
+    {
+      "from": 19,
+      "by": "TailEx2",
+      "to": 22,
+      "sa": "LEAD"
+    },
+    {
+      "from": 19,
+      "by": "BiOp2",
+      "to": 10,
+      "sa": "LEAD"
+    },
+    {
+      "from": 19,
+      "by": "+",
+      "to": 11,
+      "sa": "MOVE"
+    },
+    {
+      "from": 19,
+      "by": "-",
+      "to": 12,
+      "sa": "MOVE"
+    },
+    {
+      "from": 20,
+      "by": "TailEx1",
+      "to": 23,
+      "sa": "LEAD"
+    },
+    {
+      "from": 20,
+      "by": "BiOp1",
+      "to": 14,
+      "sa": "LEAD"
+    },
+    {
+      "from": 20,
+      "by": "*",
+      "to": 15,
+      "sa": "MOVE"
+    },
+    {
+      "from": 20,
+      "by": "/",
+      "to": 16,
+      "sa": "MOVE"
+    },
+    {
+      "from": 0,
+      "by": "...",
+      "to": 12,
+      "sa": "FOLD"
     },
     {
       "from": 1,
@@ -216,25 +511,37 @@
     {
       "from": 2,
       "by": "...",
-      "to": 2,
+      "to": 3,
       "sa": "FOLD"
     },
     {
       "from": 3,
       "by": "...",
-      "to": 3,
+      "to": 6,
+      "sa": "FOLD"
+    },
+    {
+      "from": 5,
+      "by": "...",
+      "to": 12,
       "sa": "FOLD"
     },
     {
       "from": 6,
       "by": "...",
-      "to": 5,
+      "to": 9,
       "sa": "FOLD"
     },
     {
       "from": 7,
       "by": "...",
-      "to": 6,
+      "to": 10,
+      "sa": "FOLD"
+    },
+    {
+      "from": 8,
+      "by": "...",
+      "to": 11,
       "sa": "FOLD"
     },
     {
@@ -246,7 +553,79 @@
     {
       "from": 10,
       "by": "...",
+      "to": 12,
+      "sa": "FOLD"
+    },
+    {
+      "from": 11,
+      "by": "...",
+      "to": 15,
+      "sa": "FOLD"
+    },
+    {
+      "from": 12,
+      "by": "...",
+      "to": 16,
+      "sa": "FOLD"
+    },
+    {
+      "from": 13,
+      "by": "...",
       "to": 4,
+      "sa": "FOLD"
+    },
+    {
+      "from": 14,
+      "by": "...",
+      "to": 12,
+      "sa": "FOLD"
+    },
+    {
+      "from": 15,
+      "by": "...",
+      "to": 13,
+      "sa": "FOLD"
+    },
+    {
+      "from": 16,
+      "by": "...",
+      "to": 14,
+      "sa": "FOLD"
+    },
+    {
+      "from": 17,
+      "by": "...",
+      "to": 7,
+      "sa": "FOLD"
+    },
+    {
+      "from": 19,
+      "by": "...",
+      "to": 3,
+      "sa": "FOLD"
+    },
+    {
+      "from": 20,
+      "by": "...",
+      "to": 6,
+      "sa": "FOLD"
+    },
+    {
+      "from": 21,
+      "by": "...",
+      "to": 8,
+      "sa": "FOLD"
+    },
+    {
+      "from": 22,
+      "by": "...",
+      "to": 2,
+      "sa": "FOLD"
+    },
+    {
+      "from": 23,
+      "by": "...",
+      "to": 5,
       "sa": "FOLD"
     }
   ]

@@ -1,5 +1,9 @@
 export const same = _ => _;
 
+export function splitByBlanks(s) {
+    return s.trim().split(/\s+/);
+}
+
 export function parseArgs(defaultSettings) {
     process.argv.forEach(part => {
         const [param, ...chunks] = part.split('=');

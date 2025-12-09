@@ -43,6 +43,10 @@ const rules = {
     ")": ")",
     "+": "+",
     "-": "-",
-    "n": [/-?\d+(\.\d+)?/, (s) => parseFloat(s) ],
+    "*": "*",
+    "/": "/",
+    "!": "!",
+    "NUM": [/-?\d+(\.\d+)?/, (s) => parseFloat(s) ],
+    "BLANK": [ /\s+/, () => null ],
 };
 export default rules;

@@ -1,0 +1,21 @@
+{
+  "data": [
+    "#0 <^^>: <Expr>",
+    "#1 <Expr>: <Ex1> <TailEx2>",
+    "#2 <TailEx2>: <BiOp2> <Ex1> <TailEx2>",
+    "#3 <TailEx2>: ",
+    "#4 <Ex1>: <PartEx> <TailEx1>",
+    "#5 <TailEx1>: <BiOp1> <PartEx> <TailEx1>",
+    "#6 <TailEx1>: ",
+    "#7 <PartEx>: <Unary> 'NUM'",
+    "#8 <PartEx>: '(' <Expr> ')'",
+    "#9 <Unary>: '-'",
+    "#10 <Unary>: '!'",
+    "#11 <Unary>: '+'",
+    "#12 <Unary>: ",
+    "#13 <BiOp1>: '*'",
+    "#14 <BiOp1>: '/'",
+    "#15 <BiOp2>: '+'",
+    "#16 <BiOp2>: '-'"
+  ]
+}

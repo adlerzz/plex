@@ -10,7 +10,7 @@ export class Entity {
 
     static FIRST = new Entity("^^", true);
     static ANY = new Entity("...");
-    static END = new Entity("$$");
+    static EMPTY = new Entity("$$");
 
     hash(){
         return this.name;

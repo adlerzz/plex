@@ -22,19 +22,50 @@ const rules = {
 };
 */
 
+const def = {
+  denseJoin(arr, sep="\n"){
+    return arr.filter( it => it !== "").join(sep);
+  }
+}
+
 const rules = {
-  "E": [
-    {"E O T": $ => ({'$sum': (a,b) => a+b, '$sub': (a,b) => a-b}[$[1]])($[0], $[2])}, 
-    {"T": $ => $[0]}
+  "Expr": [
+    {"Ex1 TailEx2": $ => def.denseJoin($)},
   ],
-  "T": [
-    {"n": $ => $[0]}, 
-    {"( E )": $ => $[1]}
+  "TailEx2": [
+    {"BiOp2 Ex1 TailEx2": $ => def.denseJoin([$[1], $[2], $[0]])},
+    {"$$": $ => ""}
   ],
-  "O": [
-    {"+": $ => "$sum"},
-    {"-": $ => "$sub"},
-  ]
+  "Ex1": [
+    {"PartEx TailEx1": $ => def.denseJoin($) }
+  ],
+  "TailEx1": [
+    {"BiOp1 PartEx TailEx1": $ => def.denseJoin([$[1], $[2], $[0]])},
+    {"$$": $ => ""}
+  ],
+  "PartEx": [
+    {"Unary NUM": $ => {
+      const res = `s_push_1 ${$[1]}`
+      const op = $[0] === "" ? "": "\n" + $[0];
+      return res + op;
+    }},
+    {"( Expr )": $ => $[1]} 
+  ],
+  "Unary": [
+    {"-": $ => "s_neg_1"},
+    {"!": $ => "s_not_1"},
+    {"+": $ => ""},
+    {"$$": $ => ""}
+  ],
+  "BiOp1": [
+    {"*": $ => "s_mul_2"},
+    {"/": $ => "s_div_2"},
+  ],
+  "BiOp2": [
+    {"+": $ => "s_add_2"},
+    {"-": $ => "s_sub_2"}
+  ],
+  
 }
 
 /*
@@ -44,4 +75,5 @@ const rules = {
 }
 */
 
+export {def};
 export default rules;
