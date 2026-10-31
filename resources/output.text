@@ -1,5 +1,5 @@
-s_push_1 2
-s_push_1 2
-s_add_2
-s_push_1 2
+s_push_1 9
+s_push_1 4
+s_sub_2
+s_push_1 3
 s_mul_2

@@ -3,13 +3,13 @@ import { Entity } from "./models/entity.class.js";
 import { Rule } from "./models/rule.class.js";
 import { Snap } from "./models/snap.class.js";
 import { State } from "./models/state.class.js";
-import { parseArgs, splitByBlanks } from "./commons/utils.js";
-import { importDefault, writeAsJSON } from "./commons/filesys.js";
+import { parseArgs, splitByBlanks, compact } from "./commons/utils.js";
+import { importDefault, writeAsJSON, writeAsText } from "./commons/filesys.js";
 
 const settings = {
-    rulesFile: 'prs.rules.js',
+    rulesFile: 'parser.rules.js',
     inputFile: '../resources/input.txt',
-    outputfile: 'prs.output.json',
+    outputfile: 'parser.compiled.js',
 };
 
 const Action = {
@@ -18,29 +18,35 @@ const Action = {
     FOLD: "FOLD",
 }
 
+/**
+ * Builds an LR(0) automaton from grammar rules.
+ */
 class Parser {
     constructor() {
+        /** @type {Bunch<Rule>} */
         this.rules = Bunch.empty();
+        /** @type {Bunch<Entity>} */
         this.nodes = Bunch.empty();
+        /** @type {Bunch<Entity>} */
         this.entities = Bunch.empty();
+        /** @type {Bunch<State>} */
         this.states = Bunch.empty();
-        this.statesCount = 0;
+        /** @type {Object[]} */
         this.table = [];
     }
 
+    /**
+     * Load grammar rules and build entities and Rule objects.
+     * @param {string} rulesFile
+     */
     async parseRules(rulesFile) {
         const rules = await importDefault(rulesFile);
         const rulesList = Object
             .entries(rules)
             .flatMap(([node, rules]) => rules
                 .map(rule => {
-                    if(typeof rule === 'string'){
-                        return ({ node, seq: splitByBlanks(rule) });    
-                    } else {
-                        const [seq, fold] = Object.entries(rule)?.[0];
-                        return {node, seq: splitByBlanks(seq), fold}
-                    }
-                    
+                    const [seq, callback] = Object.entries(rule)?.[0];
+                    return {node, seq: splitByBlanks(seq), callback};
                 })
             );
         const firstRule = { node: Entity.FIRST.name, seq: [rulesList[0].node] };
@@ -50,12 +56,17 @@ class Parser {
             .map(e => new Entity(e)));
 
         const enumed = [firstRule, ...rulesList]
-            .map(({ node, seq, fold }, id) =>
-                new Rule(id, this.entities.findByHash(node), seq.map(e => this.entities.findByHash(e)).filter(e => e !== Entity.EMPTY), fold)
-            );
+            .map(({ node, seq, callback }, id) => {
+                const aNode = this.entities.findByHash(node);
+                const seqRule = seq.map(e => this.entities.findByHash(e)).filter(e => e !== Entity.EMPTY)
+                return new Rule(id, aNode, seqRule, callback);
+            });
         this.rules.push(...enumed);
     }
 
+    /**
+     * Mark non-terminal entities and write a debug rules.json file.
+     */
     extractNodes() {
         this.rules
             .map(rule => rule.node)
@@ -70,6 +81,11 @@ class Parser {
         );
     }
 
+    /**
+     * Create a Parser and load its rules.
+     * @param {string} rulesFile
+     * @returns {Promise<Parser>}
+     */
     static async init(rulesFile) {
         const instance = new Parser();
         await instance.parseRules(rulesFile);
@@ -77,10 +93,11 @@ class Parser {
         return instance;
     }
 
-    assignId(state) {
-        state.id = this.statesCount++;
-    }
-
+    /**
+     * Get new LR items for all rules of a non-terminal node.
+     * @param {Entity} node
+     * @returns {Bunch<Snap>}
+     */
     getNodedSnaps(node) {
         return this.rules
             .filter(rule => rule.node.name === node?.name)
@@ -88,12 +105,21 @@ class Parser {
             .unique();
     }
 
+    /**
+     * Generate new LR items for non-terminals pointed to by the given snaps.
+     * @param {Bunch<Snap>} snaps
+     * @returns {Bunch<Snap>}
+     */
     ngen(snaps) {
         return snaps
-            .flatMap(snap => this.getNodedSnaps(snap.pointed).asArray())
+            .flatMap(snap => this.getNodedSnaps(snap.pointed).array)
             .unique();
     }
 
+    /**
+     * Compute the LR(0) closure of a state.
+     * @param {State} state
+     */
     convolute(state) {
         let size;
         do {
@@ -102,11 +128,23 @@ class Parser {
         } while (size !== 0);
     }
 
+    /**
+     * Get snaps in a state whose pointed entity matches the given entity.
+     * @param {State} state
+     * @param {Entity} entity
+     * @returns {Bunch<Snap>}
+     */
     getStateSnapsWithPointedEntity(state, entity) {
         return state.snaps
-            .filter(snap => snap.seq.at(snap.dp)?.name === entity?.name)
+            .filter(snap => snap.pointed?.name === entity?.name)
     }
 
+    /**
+     * Build the next state by moving dots over the given entity and closing.
+     * @param {State} state
+     * @param {Entity} entity
+     * @returns {State}
+     */
     moveDots(state, entity) {
         const pass = this.getStateSnapsWithPointedEntity(state, entity);
         const newSnaps = pass.map(snap => Snap.moveDot(snap));
@@ -115,10 +153,13 @@ class Parser {
         return iN;
     }
 
+    /**
+     * Build all LR(0) states and the parsing table.
+     */
     buildAutomat() {
         const i0 = State.prepare(Bunch.from([new Snap(this.rules.first())]));
         this.convolute(i0);
-        this.assignId(i0);
+        i0.assignId();
 
         this.states = Bunch.from([i0]);
         const statesQueue = Bunch.from([i0]);
@@ -132,7 +173,7 @@ class Parser {
                 if (this.states.has(toState)) {
                     toState = this.states.findByHash(toState.hash());
                 } else {
-                    this.assignId(toState);
+                    toState.assignId();
                     this.states.push(toState);
                     statesQueue.push(toState);
                 }
@@ -158,12 +199,22 @@ class Parser {
         );
     }
 
-    get json() {
-        return {
-            entities: this.entities.asArray(),
-            rules: this.rules.map(({id, node, seq, fold}) => ({id, node: node.name, seq: seq.map(e => e.name), ...{fold: fold?.toString()} })).asArray(),
-            table: this.table,
-        }
+    /**
+     * Serialize the automaton as a JavaScript module string.
+     * @returns {string}
+     */
+    serialize() {
+        const entities = "[\n    " + this.entities.array.map( entity => compact(entity)).join(",\n    ") + "\n  ]";
+        const rules = this.rules.array
+            .map(({id, node, seq, callback}) => {
+                const seqStr = JSON.stringify(seq.map(e => e.name));
+                const callbackStr = callback ? callback.toString() : 'null';
+                return `    { id: ${id}, node: ${JSON.stringify(node.name)}, seq: ${seqStr}, callback: ${callbackStr} }`;
+            })
+            .join(',\n');
+        const table = "[\n    " + this.table.map(cell => compact(cell)).join(",\n    ") + "\n  ]";
+
+        return `import * as Act from '../src/actions.js';\nexport default {\n  entities: ${entities},\n  rules: [\n${rules}\n  ],\n  table: ${table}\n};\n`;
     }
 }
 
@@ -173,13 +224,15 @@ async function main() {
     const parser = await Parser.init(settings.rulesFile);
     parser.buildAutomat();
 
+    await writeAsText(settings.outputfile, parser.serialize());
+
     console.log("entities", parser.entities.toString());
     parser.table.forEach(({ from, by, sa, to }) =>
         console.log(`$${from} . ${by.padEnd(6, ' ')} -> ${sa} ${sa === Action.FOLD ? '#' : '$'}${to}`)
     );
     console.log("rules", parser.rules.toString());
 
-    await writeAsJSON(settings.outputfile, parser.json);
+    
 }
 
 main();

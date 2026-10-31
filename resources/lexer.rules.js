@@ -38,6 +38,8 @@ const rules = {
 };
 */
 
+import * as Act from '../src/actions.js';
+
 const rules = {
     "(": "(",
     ")": ")",
@@ -46,7 +48,7 @@ const rules = {
     "*": "*",
     "/": "/",
     "!": "!",
-    "NUM": [/-?\d+(\.\d+)?/, (s) => parseFloat(s) ],
-    "BLANK": [ /\s+/, () => null ],
+    "NUM": [/-?\d+(\.\d+)?/, ($) => Act.float($) ],
+    "BLANK": [ /\s+/, () => Act.ignore() ],
 };
 export default rules;

@@ -1,14 +1,30 @@
+/**
+ * A grammar production: node -> seq.
+ */
 export class Rule {
-    constructor(id, node, seq, fold){
+    /**
+     * @param {number} id
+     * @param {Entity} node - left side of the rule
+     * @param {Entity[]} seq - right side of the rule
+     * @param {Function|null} callback - semantic action
+     */
+    constructor(id, node, seq, callback){
         this.id = id;
         this.node = node;
         this.seq = seq;
-        this.fold = fold
+        this.callback = callback;
     }
 
+    /**
+     * @returns {number}
+     */
     hash(){
         return this.id;
     }
+
+    /**
+     * @returns {string}
+     */
     toString(){
         return `#${this.id} ${this.node.toString()}: ${this.seq.join(" ")}`;
     }

@@ -3,8 +3,9 @@
     "type": "module",
 
     "scripts": {
-        "start:lex": "node ./src/lex.main.js",
-        "start:prs": "node ./src/prs.main.js",
-        "start:kon": "node ./src/kon.main.js"
+        "start:lex": "node ./src/lexer.js --build --tokenize",
+        "start:prs": "node ./src/parser.js",
+        "start:run": "node ./src/runner.js",
+        "test": "node ./test/mcr.js"
     }
 }
