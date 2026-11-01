@@ -1,4 +1,5 @@
 import Bunch from "../commons/bunch.class.js";
+import { Entity } from "./entity.class.js";
 
 /**
  * A state in the LR automaton. It is a set of Snaps.
@@ -7,23 +8,28 @@ export class State {
     static counter = 0;
 
     constructor(){
-        this.snaps = Bunch.empty();
+        this._snaps = Bunch.empty();
+        this.key = "";
         this.id = null;
+    }
+
+    /** @returns {Bunch<Snap>} */
+    get snaps() {
+        return this._snaps;
+    }
+
+    /** @param {Bunch<Snap>} value */
+    set snaps(value) {
+        this._snaps = value;
+        this.key = this._snaps
+            .map(snap => snap.key).array
+            .toSorted()
+            .join(",");
     }
 
     /** Give this state a unique id. */
     assignId(){
         this.id = State.counter++;
-    }
-
-    /**
-     * @returns {string}
-     */
-    hash(){
-        return this.snaps
-            .map(snap => snap.hash()).array
-            .toSorted()
-            .join(",")
     }
 
     /**
@@ -33,7 +39,7 @@ export class State {
      */
     static prepare(snaps){
         const prepared = new State();
-        snaps.forEach(snap => prepared.snaps.push(snap));
+        prepared.snaps = Bunch.from(snaps.array);
         return prepared;
     }
 
@@ -44,7 +50,7 @@ export class State {
      */
     snapsByEntity(entity){
         return this.snaps
-            .filter(snap => snap.seq.at(snap.dp).id === entity.id)
+            .filter(snap => snap.pointed.id === entity.id)
     }
 
     /**
@@ -53,8 +59,8 @@ export class State {
      */
     pointedEntities(){
         return this.snaps
-            .map(snap => snap.seq?.[snap.dp])
-            .filter(Boolean)
+            .map(snap => snap.pointed)
+            .filter(entity => entity !== Entity.NONE)
             .unique();
     }
 

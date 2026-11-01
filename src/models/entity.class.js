@@ -9,6 +9,7 @@ export class Entity {
     constructor(name, isNode = false){
         this.name = name;
         this.isNode = isNode;
+        this.key = name;
     }
 
     /**
@@ -24,13 +25,8 @@ export class Entity {
     static ANY = new Entity("...");
     /** The empty (epsilon) symbol. */
     static EMPTY = new Entity("$$");
-
-    /**
-     * @returns {string}
-     */
-    hash(){
-        return this.name;
-    }
+    /** The null placeholder for "no entity after the dot". */
+    static NONE = new Entity("$$$");
 
     /**
      * @returns {string}

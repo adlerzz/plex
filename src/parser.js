@@ -56,9 +56,9 @@ class Parser {
             .map(e => new Entity(e)));
 
         const enumed = [firstRule, ...rulesList]
-            .map(({ node, seq, callback }, id) => {
-                const aNode = this.entities.findByHash(node);
-                const seqRule = seq.map(e => this.entities.findByHash(e)).filter(e => e !== Entity.EMPTY)
+            .map(({ node: nodeKey, seq, callback }, id) => {
+                const aNode = this.entities.findByKey(nodeKey);
+                const seqRule = seq.map(e => this.entities.findByKey(e)).filter(e => e !== Entity.EMPTY)
                 return new Rule(id, aNode, seqRule, callback);
             });
         this.rules.push(...enumed);
@@ -71,7 +71,7 @@ class Parser {
         this.rules
             .map(rule => rule.node)
             .forEach(node => {
-                const e = this.entities.findByHash(node.hash());
+                const e = this.entities.findByKey(node.key);
                 e.markAsNode();
                 this.nodes.add(e);
             });
@@ -124,7 +124,9 @@ class Parser {
         let size;
         do {
             const toAdd = this.ngen(state.snaps);
-            size = state.snaps.merge(toAdd);
+            const merged = Bunch.from(state.snaps.array);
+            size = merged.merge(toAdd);
+            state.snaps = merged;
         } while (size !== 0);
     }
 
@@ -171,11 +173,11 @@ class Parser {
             entities.forEach(entity => {
                 let toState = this.moveDots(fromState, entity);
                 if (this.states.has(toState)) {
-                    toState = this.states.findByHash(toState.hash());
+                    toState = this.states.findByKey(toState.key);
                 } else {
                     toState.assignId();
-                    this.states.push(toState);
-                    statesQueue.push(toState);
+                    this.states.push(toState);  // could be 'add'
+                    statesQueue.push(toState);  // could be 'add'
                 }
                 this.table.push({
                     from: fromState.id,
@@ -187,7 +189,7 @@ class Parser {
         }
 
         this.states.forEach(state => state.snaps
-            .filter(snap => !snap.pointed)
+            .filter(snap => snap.pointed === Entity.NONE)
             .forEach(snap => {
                 this.table.push({
                     from: state.id,

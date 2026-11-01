@@ -1,5 +1,5 @@
 /**
- * A set-like collection of items that are identified by their hash() value.
+ * A set-like collection of items that are identified by their key property.
  * It can also behave like an array.
  */
 export default class Bunch {
@@ -8,6 +8,8 @@ export default class Bunch {
      */
     constructor(init){
         this.data = [...(init ?? [])];
+        this.index = new Map();
+        this.data.forEach(el => this.index.set(el.key, el));
     }
 
     /**
@@ -26,7 +28,7 @@ export default class Bunch {
      * @returns {Bunch}
      */
     static empty(){
-        return new Bunch([]);
+        return new Bunch();
     }
 
     /**
@@ -47,25 +49,26 @@ export default class Bunch {
     }
 
     /**
-     * Add items if their hash is not already present.
+     * Add items if their key is not already present.
      * @param {...*} elements
      */
     add(...elements) {
         elements.forEach(element => {
-            if(this.data.find(el => element.hash() === el.hash())){
+            if(this.index.has(element.key)){
                 return;
             }
+            this.index.set(element.key, element);
             this.data.push(element);
         })
     }
 
     /**
-     * Check if an item with the same hash is present.
+     * Check if an item with the same key is present.
      * @param {*} element
      * @returns {boolean}
      */
     has(element) {
-        return !!this.data.find( el => element.hash() === el.hash() );
+        return this.index.has(element.key);
     }
 
     /**
@@ -73,7 +76,10 @@ export default class Bunch {
      * @param {...*} elements
      */
     push(...elements) {
-        this.data.push(...elements);
+        elements.forEach(element => {
+            this.index.set(element.key, element);
+            this.data.push(element);
+        });
     }
 
     /**
@@ -81,7 +87,9 @@ export default class Bunch {
      * @returns {*}
      */
     dequeue(){
-        return this.data.shift();
+        const element = this.data.shift();
+        if (element) this.index.delete(element.key);
+        return element;
     }
 
     /**
@@ -89,7 +97,9 @@ export default class Bunch {
      * @returns {*}
      */
     pop(){
-        return this.data.pop();
+        const element = this.data.pop();
+        if (element) this.index.delete(element.key);
+        return element;
     }
 
     /**
@@ -115,12 +125,12 @@ export default class Bunch {
     }
 
     /**
-     * Find an item by its hash value.
-     * @param {string|number} hash
+     * Find an item by its key value.
+     * @param {string|number} key
      * @returns {*}
      */
-    findByHash(hash){
-        return this.data.find(it => it.hash() === hash);
+    findByKey(key){
+        return this.index.get(key);
     }
 
     /**

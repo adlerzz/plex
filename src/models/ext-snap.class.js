@@ -3,19 +3,20 @@ import { Snap } from "./snap.class.js";
 import { Entity } from "./entity.class.js";
 
 /**
- * An LR(1) item: a Snap plus a set of lookahead symbols.
+ * An LR(1) item: a Snap plus a set of lookout symbols.
  */
 export class ExtSnap {
     /**
      * @param {Snap} snap
-     * @param {Entity|Entity[]} lookaheads
+     * @param {Entity|Entity[]} lookouts
      */
-    constructor(snap, lookaheads = [Entity.ANY]) {
+    constructor(snap, lookouts = [Entity.ANY]) {
         if (!(snap instanceof Snap)) {
             throw new TypeError("ExtSnap must wrap a Snap instance");
         }
         this.snap = snap;
-        this.lookaheads = Bunch.from(Array.isArray(lookaheads) ? lookaheads : [lookaheads]);
+        this.lookouts = Bunch.from(Array.isArray(lookouts) ? lookouts : [lookouts]);
+        this.key = `${snap.key}(${this.lookoutKey()})`;
     }
 
     /** @returns {Rule} */
@@ -49,55 +50,48 @@ export class ExtSnap {
     }
 
     /**
-     * Move the dot forward, keeping the same lookaheads.
+     * Move the dot forward, keeping the same lookouts.
      * @param {ExtSnap} extSnap
      * @returns {ExtSnap}
      */
     static moveDot(extSnap) {
-        return new ExtSnap(Snap.moveDot(extSnap.snap), extSnap.lookaheads.array);
+        return new ExtSnap(Snap.moveDot(extSnap.snap), extSnap.lookouts.array);
     }
 
     /**
-     * Hash of the underlying LR(0) item, without lookaheads.
+     * Key of the underlying LR(0) item, without lookouts.
      * @returns {string}
      */
-    coreHash() {
-        return this.snap.hash();
+    coreKey() {
+        return this.snap.key;
     }
 
     /**
      * @returns {string}
      */
-    lookaheadKey() {
-        return this.lookaheads.array
+    lookoutKey() {
+        return this.lookouts.array
             .map(entity => entity.name)
             .toSorted()
             .join("|");
     }
 
     /**
-     * Full hash including lookaheads.
-     * @returns {string}
-     */
-    hash() {
-        return `${this.coreHash()}(${this.lookaheadKey()})`;
-    }
-
-    /**
-     * Add lookaheads from another ExtSnap with the same core.
+     * Add lookouts from another ExtSnap with the same core.
      * @param {ExtSnap} other
      */
-    mergeLookaheads(other) {
+    mergeLookouts(other) {
         if (!(other instanceof ExtSnap)) {
-            throw new TypeError("mergeLookaheads expects an ExtSnap instance");
+            throw new TypeError("mergeLookouts expects an ExtSnap instance");
         }
-        this.lookaheads.merge(other.lookaheads);
+        this.lookouts.merge(other.lookouts);
+        this.key = `${this.coreKey()}(${this.lookoutKey()})`;
     }
 
     /**
      * @returns {string}
      */
     toString() {
-        return `${this.snap.toString()} / ${this.lookaheadKey()}`;
+        return `${this.snap.toString()} / ${this.lookoutKey()}`;
     }
 }

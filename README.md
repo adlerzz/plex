@@ -27,8 +27,9 @@ It has three parts:
 | **Entity** | A symbol in the grammar. It can be a terminal (token) or a non-terminal (node). |
 | **Rule** | A grammar production, for example `Expr → Ex1 TailEx2`. |
 | **Snap** | An LR item: a rule with a dot showing how much is already matched. |
-| **ExtSnap** | A Snap plus lookahead symbols. Used for LR(1) / LALR(1). |
+| **ExtSnap** | A Snap plus lookout symbols. Used for LR(1) / LALR(1). |
 | **State** | A set of Snaps in the LR automaton. |
+| **Lookout** | A terminal symbol that follows a rule in some context. Used by LR(1) / LALR(1) to decide when to reduce. |
 | **Action** | What the runner does next: `MOVE` (shift), `FOLD` (reduce), or `LEAD` (goto). |
 | **Callback** | A function run when a lexer rule matches or a parser rule folds. |
 

@@ -13,13 +13,7 @@ export class Rule {
         this.node = node;
         this.seq = seq;
         this.callback = callback;
-    }
-
-    /**
-     * @returns {number}
-     */
-    hash(){
-        return this.id;
+        this.key = id;
     }
 
     /**

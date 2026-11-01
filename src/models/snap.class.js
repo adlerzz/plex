@@ -1,5 +1,6 @@
 import { pad } from "../commons/utils.js";
 import { DOT_POINT } from "../commons/utils.js";
+import { Entity } from "./entity.class.js";
 
 /**
  * An LR(0) item: a Rule with a dot position.
@@ -12,6 +13,7 @@ export class Snap {
     constructor(rule, dp = 0){
         this.rule = rule;
         this.dp = dp;
+        this.key = `#${rule.id}[${dp}]`;
     }
 
     /**
@@ -33,21 +35,14 @@ export class Snap {
         return this.rule.seq;
     }
 
-    /** @returns {Entity|undefined} the entity right after the dot */
+    /** @returns {Entity} the entity right after the dot, or Entity.NONE if the dot is at the end */
     get pointed(){
-        return this.rule.seq.at(this.dp);
+        return this.rule.seq.at(this.dp) ?? Entity.NONE;
     }
 
     /** @returns {number} */
     get id(){
         return this.rule.id;
-    }
-
-    /**
-     * @returns {string}
-     */
-    hash(){
-        return `#${this.rule.id}[${this.dp}]`;
     }
 
     /**
