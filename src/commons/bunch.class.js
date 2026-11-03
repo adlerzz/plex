@@ -185,6 +185,15 @@ export default class Bunch {
     }
 
     /**
+     * Check if all items pass the test.
+     * @param {Function} cond
+     * @returns {boolean}
+     */
+    every(cond) {
+        return this.data.every((el, index) => cond(el, index));
+    }
+
+    /**
      * Return a new Bunch with duplicates removed.
      * @returns {Bunch}
      */
@@ -218,5 +227,14 @@ export default class Bunch {
      */
     toString(){
         return "[\n" + this.data.map(el => "  " + el.toString()).join(",\n") + "\n]";
+    }
+
+    /**
+     * Serialize as the raw array. The index is derived from the data, so it is dropped.
+     * Rebuild with Bunch.from(array).
+     * @returns {Array}
+     */
+    toJSON(){
+        return this.data;
     }
 }

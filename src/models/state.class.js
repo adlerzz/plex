@@ -50,7 +50,7 @@ export class State {
      */
     snapsByEntity(entity){
         return this.snaps
-            .filter(snap => snap.pointed.id === entity.id)
+            .filter(snap => Entity.equals(snap.pointed, entity))
     }
 
     /**

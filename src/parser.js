@@ -23,7 +23,7 @@ const Action = {
 /**
  * Builds an LR(0) automaton from grammar rules.
  */
-class Parser {
+export class Parser {
     constructor() {
         /** @type {Bunch<Rule>} */
         this.rules = Bunch.empty();
@@ -51,7 +51,7 @@ class Parser {
                     return {node, seq: splitByBlanks(seq), callback};
                 })
             );
-        const firstRule = { node: Entity.FIRST.name, seq: [rulesList[0].node] };
+        const firstRule = { node: Entity.FIRST.key, seq: [rulesList[0].node] };
 
         this.entities.add(Entity.EMPTY, ...[firstRule, ...rulesList]
             .flatMap(({ node, seq }) => [node, ...seq])
@@ -60,7 +60,9 @@ class Parser {
         const enumed = [firstRule, ...rulesList]
             .map(({ node: nodeKey, seq, callback }, id) => {
                 const aNode = this.entities.findByKey(nodeKey);
-                const seqRule = seq.map(e => this.entities.findByKey(e)).filter(e => e !== Entity.EMPTY)
+                const seqRule = seq
+                    .map(e => this.entities.findByKey(e))
+                    .filter(e => !Entity.equals(e, Entity.EMPTY))
                 return new Rule(id, aNode, seqRule, callback);
             });
         this.rules.push(...enumed);
@@ -92,7 +94,96 @@ class Parser {
         const instance = new Parser();
         await instance.parseRules(rulesFile);
         instance.extractNodes();
+        instance.computeInitials();
         return instance;
+    }
+
+    /**
+     * Compute initials for all grammar entities and build the canVanish flags.
+     * Must be called after extractNodes().
+     *
+     * The initials live on the entities and grow in place for the whole fixed point,
+     * so a single Bunch per entity is the only source of truth. A terminal starts
+     * itself, a non-terminal starts with an empty Bunch.
+     */
+    computeInitials() {
+        this.entities.forEach(entity => {
+            entity.canVanish = false;
+            entity.initials = entity.isNode ? Bunch.empty() : Bunch.from([entity]);
+        });
+
+        let changed;
+        do {
+            changed = 0;
+            this.rules.forEach(rule => {
+                changed += rule.node.initials.merge(this.seqInitials(rule.seq));
+
+                if (this.seqCanVanish(rule.seq) && !rule.node.canVanish) {
+                    rule.node.canVanish = true;
+                    changed++;
+                }
+            });
+        } while (changed !== 0);
+    }
+
+    /**
+     * Initials of a sequence, without the vanishing case.
+     * Stops at the first symbol that cannot produce the empty string.
+     * Entity.EMPTY is skipped: it stands for the empty string.
+     * @param {Bunch<Entity>|Entity[]} seq
+     * @returns {Bunch<Entity>}
+     */
+    seqInitials(seq) {
+        const result = Bunch.empty();
+
+        for (const symbol of seq) {
+            if (symbol === Entity.EMPTY) {
+                continue;
+            }
+
+            result.merge(symbol.initials);
+
+            if (!symbol.canVanish) {
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Check if a sequence can produce the empty string.
+     * @param {Bunch<Entity>} seq
+     * @returns {boolean}
+     */
+    seqCanVanish(seq) {
+        return seq.every(symbol => symbol === Entity.EMPTY || symbol.canVanish);
+    }
+
+    /**
+     * Initials of a sequence. If the whole sequence can vanish, add lookouts.
+     * @param {Bunch<Entity>|Entity[]} seq
+     * @param {Bunch<Entity>|Entity[]} [lookouts]
+     * @returns {Bunch<Entity>}
+     */
+    initials(seq, lookouts) {
+        const result = this.seqInitials(seq);
+
+        if (this.seqCanVanish(seq)) {
+            result.merge(Bunch.from(lookouts ?? []));
+        }
+
+        return result;
+    }
+
+    /**
+     * Build a Bunch of real entities from their names.
+     * Names that are not in the grammar give undefined items.
+     * @param {string[]} names
+     * @returns {Bunch<Entity>}
+     */
+    entitiesByName(names) {
+        return Bunch.from(names.map(name => this.entities.findByKey(name)));
     }
 
     /**
@@ -102,7 +193,7 @@ class Parser {
      */
     getNodedSnaps(node) {
         return this.rules
-            .filter(rule => rule.node.name === node?.name)
+            .filter(rule => Entity.equals(rule.node, node))
             .map(rule => new Snap(rule))
             .unique();
     }
@@ -140,7 +231,7 @@ class Parser {
      */
     getStateSnapsWithPointedEntity(state, entity) {
         return state.snaps
-            .filter(snap => snap.pointed?.name === entity?.name)
+            .filter(snap => Entity.equals(snap.pointed, entity))
     }
 
     /**
@@ -183,7 +274,7 @@ class Parser {
                 }
                 this.table.push({
                     from: fromState.id,
-                    by: entity.name,
+                    by: entity.key,
                     to: toState.id,
                     sa: entity.isNode ? Action.LEAD : Action.MOVE
                 });
@@ -191,12 +282,12 @@ class Parser {
         }
 
         this.states.forEach(state => state.snaps
-            .filter(snap => snap.pointed === Entity.NONE)
+            .filter(snap => Entity.equals(snap.pointed, Entity.NONE))
             .forEach(snap => {
-                const accept = snap.rule.node.name === Entity.FIRST.name;
+                const accept = Entity.equals(snap.rule.node, Entity.FIRST);
                 this.table.push({
                     from: state.id,
-                    by: Entity.ANY.name,
+                    by: Entity.ANY.key,
                     to: accept ? 0 : snap.rule.id,
                     sa: accept ? Action.ACCEPT : Action.FOLD
                 });
@@ -209,7 +300,15 @@ class Parser {
      * @returns {string}
      */
     serialize() {
-        const entities = "[\n    " + this.entities.array.map( entity => compact(entity)).join(",\n    ") + "\n  ]";
+        const entities = "[\n    " + this.entities.array
+            .map(entity => compact({
+                name: entity.name,
+                isNode: entity.isNode,
+                key: entity.key,
+                canVanish: entity.canVanish,
+                initials: entity.initials.array.map(initial => initial.name),
+            }))
+            .join(",\n    ") + "\n  ]";
         const rules = this.rules.array
             .map(({id, node, seq, callback}) => {
                 const seqStr = JSON.stringify(seq.map(e => e.name));
@@ -233,7 +332,7 @@ async function main() {
 
     console.log("entities", parser.entities.toString());
     parser.table.forEach(({ from, by, sa, to }) =>
-        console.log(`$${from} . ${by.padEnd(6, ' ')} -> ${sa} ${sa === Action.FOLD ? '#' : '$'}${to}`)
+        console.log(`$${from} . ${by.padEnd(8, ' ')} -> ${sa} ${sa === Action.FOLD ? '#' : '$'}${to}`)
     );
     console.log("rules", parser.rules.toString());
 
