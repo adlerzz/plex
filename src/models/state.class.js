@@ -39,7 +39,7 @@ export class State {
      */
     static prepare(snaps){
         const prepared = new State();
-        prepared.snaps = Bunch.from(snaps.array);
+        prepared.snaps = Bunch.from(snaps);
         return prepared;
     }
 

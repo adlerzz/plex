@@ -16,6 +16,8 @@ const Action = {
     LEAD: "LEAD",
     MOVE: "MOVE",
     FOLD: "FOLD",
+    ACCEPT: "ACCEPT",
+    ERROR: "ERROR",
 }
 
 /**
@@ -112,7 +114,7 @@ class Parser {
      */
     ngen(snaps) {
         return snaps
-            .flatMap(snap => this.getNodedSnaps(snap.pointed).array)
+            .flatMap(snap => this.getNodedSnaps(snap.pointed))
             .unique();
     }
 
@@ -124,7 +126,7 @@ class Parser {
         let size;
         do {
             const toAdd = this.ngen(state.snaps);
-            const merged = Bunch.from(state.snaps.array);
+            const merged = Bunch.from(state.snaps);
             size = merged.merge(toAdd);
             state.snaps = merged;
         } while (size !== 0);
@@ -191,12 +193,13 @@ class Parser {
         this.states.forEach(state => state.snaps
             .filter(snap => snap.pointed === Entity.NONE)
             .forEach(snap => {
+                const accept = snap.rule.node.name === Entity.FIRST.name;
                 this.table.push({
                     from: state.id,
                     by: Entity.ANY.name,
-                    to: snap.rule.id,
-                    sa: Action.FOLD
-                })
+                    to: accept ? 0 : snap.rule.id,
+                    sa: accept ? Action.ACCEPT : Action.FOLD
+                });
             })
         );
     }

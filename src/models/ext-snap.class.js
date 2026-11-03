@@ -8,14 +8,14 @@ import { Entity } from "./entity.class.js";
 export class ExtSnap {
     /**
      * @param {Snap} snap
-     * @param {Entity|Entity[]} lookouts
+     * @param {Bunch<Entity>} lookouts
      */
-    constructor(snap, lookouts = [Entity.ANY]) {
+    constructor(snap, lookouts) {
         if (!(snap instanceof Snap)) {
             throw new TypeError("ExtSnap must wrap a Snap instance");
         }
         this.snap = snap;
-        this.lookouts = Bunch.from(Array.isArray(lookouts) ? lookouts : [lookouts]);
+        this.lookouts = Bunch.from(lookouts);
         this.key = `${snap.key}(${this.lookoutKey()})`;
     }
 
@@ -44,6 +44,11 @@ export class ExtSnap {
         return this.snap.pointed;
     }
 
+    /** @returns {Bunch<Entity>} the symbols after the pointed entity, may be empty */
+    get tail() {
+        return Bunch.from(this.snap.seq.slice(this.snap.dp + 1));
+    }
+
     /** @returns {number} */
     get id() {
         return this.snap.id;
@@ -55,7 +60,7 @@ export class ExtSnap {
      * @returns {ExtSnap}
      */
     static moveDot(extSnap) {
-        return new ExtSnap(Snap.moveDot(extSnap.snap), extSnap.lookouts.array);
+        return new ExtSnap(Snap.moveDot(extSnap.snap), extSnap.lookouts);
     }
 
     /**

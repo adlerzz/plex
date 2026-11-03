@@ -8,6 +8,14 @@ const settings = {
     outputfile: 'output.text',
 };
 
+const Action = {
+    LEAD: "LEAD",
+    MOVE: "MOVE",
+    FOLD: "FOLD",
+    ACCEPT: "ACCEPT",
+    ERROR: "ERROR",
+};
+
 async function main() {
     parseArgs(settings);
 
@@ -42,10 +50,14 @@ function runAutomat(input, table, rules){
     let i = 0;
     do{
         const s = states.at(-1);
-        const c = input.at(i);        
-        const [action, to] = table[`${s} ${c?.type}`] ?? table[`${s} ...`];
+        const c = input.at(i);
+        const [action, to] = table[`${s} ${c?.type}`] ?? table[`${s} ...`] ?? [Action.ERROR];
 
-        if(action === 'FOLD' && to === 0){
+        if (action === Action.ERROR) {
+            throw new Error(`Unexpected token ${c?.type ?? '$'} in state ${s}`);
+        }
+
+        if (action === Action.ACCEPT) {
             console.log("accept");
             break;
         }
@@ -53,13 +65,13 @@ function runAutomat(input, table, rules){
         console.log([action, to]);
 
         switch(action){
-            case 'MOVE': {
+            case Action.MOVE: {
                 states.push(to);
                 tokens.push(c);
                 i++;
             } break;
 
-            case 'FOLD': {
+            case Action.FOLD: {
                 const rule = rules[to];
                 const foldArgs = [];
                 rule.seq.forEach(() => {

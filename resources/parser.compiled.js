@@ -92,7 +92,7 @@ export default {
     { from: 20, by: "*", to: 15, sa: "MOVE" },
     { from: 20, by: "/", to: 16, sa: "MOVE" },
     { from: 0, by: "...", to: 12, sa: "FOLD" },
-    { from: 1, by: "...", to: 0, sa: "FOLD" },
+    { from: 1, by: "...", to: 0, sa: "ACCEPT" },
     { from: 2, by: "...", to: 3, sa: "FOLD" },
     { from: 3, by: "...", to: 6, sa: "FOLD" },
     { from: 5, by: "...", to: 12, sa: "FOLD" },

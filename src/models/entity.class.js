@@ -27,6 +27,8 @@ export class Entity {
     static EMPTY = new Entity("$$");
     /** The null placeholder for "no entity after the dot". */
     static NONE = new Entity("$$$");
+    /** The end-of-input marker. */
+    static EOF = new Entity("$");
 
     /**
      * @returns {string}

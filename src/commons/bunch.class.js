@@ -18,8 +18,11 @@ export default class Bunch {
      * @returns {Bunch}
      */
     static from(init){
-        if(Array.isArray(init)){
-            return new Bunch(init);
+        if(init == null){
+            return undefined;
+        }
+        if(typeof init[Symbol.iterator] === 'function'){
+            return new Bunch([...init]);
         }
     }
 
@@ -38,6 +41,24 @@ export default class Bunch {
      */
     at(i){
         return this.data.at(i);
+    }
+
+    /**
+     * Iterate over items.
+     * @returns {Iterator<*>}
+     */
+    [Symbol.iterator](){
+        return this.data[Symbol.iterator]();
+    }
+
+    /**
+     * Return a new Bunch with items from start to end (exclusive).
+     * @param {number} start
+     * @param {number} [end]
+     * @returns {Bunch}
+     */
+    slice(start, end){
+        return Bunch.from(this.data.slice(start, end));
     }
 
     /**
@@ -151,7 +172,7 @@ export default class Bunch {
      */
     flatMap(f){
         return Bunch.from(
-            this.data.flatMap(el => f(el))
+            this.data.flatMap(el => [...f(el)])
         );
     }
 

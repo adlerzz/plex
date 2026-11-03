@@ -60,8 +60,3 @@ node src/runner.js
 
 This reads tokens and the parser table and writes `resources/output.text`.
 
-## Notes
-
-- Compiled lexer rules are saved as JavaScript modules, not JSON.
-- Compiled parser output is also a JavaScript module.
-- Helper functions live in `src/actions.js` and can be used in both lexer and parser rules.
