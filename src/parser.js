@@ -2,6 +2,7 @@ import Bunch from "./commons/bunch.class.js";
 import { Entity } from "./models/entity.class.js";
 import { Rule } from "./models/rule.class.js";
 import { Snap } from "./models/snap.class.js";
+import { ExtSnap } from "./models/ext-snap.class.js";
 import { State } from "./models/state.class.js";
 import { parseArgs, splitByBlanks, compact } from "./commons/utils.js";
 import { importDefault, writeAsJSON, writeAsText } from "./commons/filesys.js";
@@ -188,24 +189,28 @@ export class Parser {
 
     /**
      * Get new LR items for all rules of a non-terminal node.
+     * In the LR(0) mode every item carries the same lookout, Entity.ANY.
      * @param {Entity} node
-     * @returns {Bunch<Snap>}
+     * @returns {Bunch<ExtSnap>}
      */
     getNodedSnaps(node) {
         return this.rules
             .filter(rule => Entity.equals(rule.node, node))
-            .map(rule => new Snap(rule))
+            .map(rule => new ExtSnap(new Snap(rule), Bunch.from([Entity.ANY])))
             .unique();
     }
 
     /**
      * Generate new LR items for non-terminals pointed to by the given snaps.
-     * @param {Bunch<Snap>} snaps
-     * @returns {Bunch<Snap>}
+     * @param {Bunch<ExtSnap>} snaps
+     * @returns {Bunch<ExtSnap>}
      */
     ngen(snaps) {
         return snaps
-            .flatMap(snap => this.getNodedSnaps(snap.pointed))
+            .flatMap(extSnap => extSnap.pointed.isNode
+                ? this.getNodedSnaps(extSnap.pointed)
+                : Bunch.empty()
+            )
             .unique();
     }
 
@@ -242,7 +247,7 @@ export class Parser {
      */
     moveDots(state, entity) {
         const pass = this.getStateSnapsWithPointedEntity(state, entity);
-        const newSnaps = pass.map(snap => Snap.moveDot(snap));
+        const newSnaps = pass.map(extSnap => ExtSnap.moveDot(extSnap));
         const iN = State.prepare(newSnaps);
         this.convolute(iN);
         return iN;
@@ -252,7 +257,9 @@ export class Parser {
      * Build all LR(0) states and the parsing table.
      */
     buildAutomat() {
-        const i0 = State.prepare(Bunch.from([new Snap(this.rules.first())]));
+        const i0 = State.prepare(Bunch.from([
+            new ExtSnap(new Snap(this.rules.first()), Bunch.from([Entity.ANY]))
+        ]));
         this.convolute(i0);
         i0.assignId();
 

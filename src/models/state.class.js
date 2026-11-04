@@ -1,8 +1,10 @@
 import Bunch from "../commons/bunch.class.js";
 import { Entity } from "./entity.class.js";
+import { ExtSnap } from "./ext-snap.class.js";
 
 /**
- * A state in the LR automaton. It is a set of Snaps.
+ * A state in the LR automaton. It is a set of ExtSnaps.
+ * The key is built from the cores of the items, so the key does not depend on lookouts.
  */
 export class State {
     static counter = 0;
@@ -13,16 +15,16 @@ export class State {
         this.id = null;
     }
 
-    /** @returns {Bunch<Snap>} */
+    /** @returns {Bunch<ExtSnap>} */
     get snaps() {
         return this._snaps;
     }
 
-    /** @param {Bunch<Snap>} value */
+    /** @param {Bunch<ExtSnap>} value */
     set snaps(value) {
         this._snaps = value;
         this.key = this._snaps
-            .map(snap => snap.key).array
+            .map(extSnap => extSnap.coreKey()).array
             .toSorted()
             .join(",");
     }
