@@ -1,32 +1,41 @@
 import { readAsText } from "../src/commons/filesys.js";
 
+const reg = {A: 0, B: 0, C: 0, D: 0, E: 0};
 const stack = [];
 const actions = {
-    "s_push_1": (args) => {
-        stack.push(+args[0]);
+    "push": (args) => { // push A
+        stack.push(reg[args[0]]);
     },
-    "s_neg_1": () => {
-        const a = stack.pop();
-        stack.push(-a);
+    "pop": (args) => { // pop A
+        reg[args[0]] = stack.pop();
     },
-    "s_not_1": () => {
-        const a = stack.pop();
-        stack.push(+!a);
+    "stor": (args) => { // stor A 42
+        reg[args[0]] = +args[1];
     },
-    "s_add_2": () => {
-        const b = stack.pop();
-        const a = stack.pop();
-        stack.push(a + b);
+    "mov": (args) => { // mov A B
+        reg[args[0]] = reg[args[1]];
     },
-    "s_sub_2": () => {
-        const b = stack.pop();
-        const a = stack.pop();
-        stack.push(a - b);
+    "neg": (args) => { // neg A
+        reg[args[0]] = - reg[args[0]];
     },
-    "s_mul_2": () => {
-        const b = stack.pop();
-        const a = stack.pop();
-        stack.push(a * b);
+    "not": (args) => { // not A
+        reg[args[0]] = !reg[args[0]];
+    },
+    "add": (args) => { // add A B
+        reg[args[0]] += reg[args[1]];
+    },
+    "sub": (args) => { // sub A B
+        reg[args[0]] -= reg[args[1]];
+    },
+    "mul": (args) => { // mul A B
+        reg[args[0]] *= reg[args[1]];
+    },
+    "div": (args) => { // div A B
+        const a = reg[args[0]];
+        const b = reg[args[1]];
+
+        reg[args[0]] = (a / b | 0);
+        reg[args[1]] = a % b;
     },
 }
 
@@ -37,4 +46,4 @@ lines.split(/[\r\n]/).forEach(line => {
 	actions[command](args);
 });
 
-console.log(stack);
+console.log({stack, reg});

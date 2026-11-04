@@ -22,13 +22,13 @@ async function main() {
     const parser = await importDefault(settings.parserFile);
     const p = parser.table.map( ({from, by, to, sa}) => {
 
-        console.log(`${from} ${by} ${sa} ${to}`);
+        // console.log(`${from} ${by} ${sa} ${to}`);
 
         return [`${from} ${by}`, [sa, +to]];
     });
 
     const a = Object.fromEntries(p);
-    console.log(a);
+    // console.log(a);
     writeAsJSON("table.json", a);
 
     const input = await readAsJSON(settings.tokensFile);
@@ -53,6 +53,8 @@ function runAutomat(input, table, rules){
         const c = input.at(i);
         const [action, to] = table[`${s} ${c?.type}`] ?? table[`${s} ...`] ?? [Action.ERROR];
 
+        // console.log([action, to]);
+
         if (action === Action.ERROR) {
             throw new Error(`Unexpected token ${c?.type ?? '$'} in state ${s}`);
         }
@@ -61,8 +63,6 @@ function runAutomat(input, table, rules){
             console.log("accept");
             break;
         }
-
-        console.log([action, to]);
 
         switch(action){
             case Action.MOVE: {
@@ -79,13 +79,14 @@ function runAutomat(input, table, rules){
                     foldArgs.push(tokens.pop());
                 });
                 const [, pto] = table[`${states.at(-1)} ${rule.node}`];
+                // console.log(foldArgs.map(f => f.value));
                 const values = foldArgs.reverse().map(arg => arg.value);
                 const value = rule.callback ? rule.callback(values, Act) : values;
                 tokens.push({token: rule.node, value});
                 states.push(pto);
             }
         }
-        console.log({states, tokens});
+        // console.log({states, tokens});
         
     }while(states.length > 1);
 

@@ -1,5 +1,14 @@
-s_push_1 9
-s_push_1 4
-s_sub_2
-s_push_1 3
-s_mul_2
+stor A 9
+push A
+stor A 4
+push A
+pop B
+pop A
+sub A B
+push A
+stor A 3
+push A
+pop B
+pop A
+mul A B
+push A

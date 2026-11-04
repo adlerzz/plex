@@ -23,25 +23,33 @@ export default {
   rules: [
     { id: 0, node: "^^", seq: ["Expr"], callback: null },
     { id: 1, node: "Expr", seq: ["Ex1","TailEx2"], callback: $ => Act.denseJoin($) },
-    { id: 2, node: "TailEx2", seq: ["BiOp2","Ex1","TailEx2"], callback: $ => Act.denseJoin([$[1], $[2], $[0]]) },
+    { id: 2, node: "TailEx2", seq: ["BiOp2","Ex1","TailEx2"], callback: $ => {
+      const load2 = ["pop B", "pop A"];
+      const push = "push A";
+      return Act.denseJoin([$[1], $[2], ...load2, $[0], push])} },
     { id: 3, node: "TailEx2", seq: [], callback: $ => "" },
     { id: 4, node: "Ex1", seq: ["PartEx","TailEx1"], callback: $ => Act.denseJoin($) },
-    { id: 5, node: "TailEx1", seq: ["BiOp1","PartEx","TailEx1"], callback: $ => Act.denseJoin([$[1], $[2], $[0]]) },
+    { id: 5, node: "TailEx1", seq: ["BiOp1","PartEx","TailEx1"], callback: $ => {
+      const load2 = ["pop B", "pop A"];
+      const push = "push A";
+      return Act.denseJoin([$[1], $[2], ...load2, $[0], push]);
+    } },
     { id: 6, node: "TailEx1", seq: [], callback: $ => "" },
     { id: 7, node: "PartEx", seq: ["Unary","NUM"], callback: $ => {
-      const res = `s_push_1 ${$[1]}`
-      const op = $[0] === "" ? "": "\n" + $[0];
-      return res + op;
+      const stor = `stor A ${$[1]}`
+      const op = Act.isEmpty($[0]) ? "": `${$[0]}`;
+      const push = "push A";
+      return Act.denseJoin([stor, op, push]); 
     } },
     { id: 8, node: "PartEx", seq: ["(","Expr",")"], callback: $ => $[1] },
-    { id: 9, node: "Unary", seq: ["-"], callback: $ => "s_neg_1" },
-    { id: 10, node: "Unary", seq: ["!"], callback: $ => "s_not_1" },
+    { id: 9, node: "Unary", seq: ["-"], callback: $ => "neg A" },
+    { id: 10, node: "Unary", seq: ["!"], callback: $ => "not A" },
     { id: 11, node: "Unary", seq: ["+"], callback: $ => "" },
     { id: 12, node: "Unary", seq: [], callback: $ => "" },
-    { id: 13, node: "BiOp1", seq: ["*"], callback: $ => "s_mul_2" },
-    { id: 14, node: "BiOp1", seq: ["/"], callback: $ => "s_div_2" },
-    { id: 15, node: "BiOp2", seq: ["+"], callback: $ => "s_add_2" },
-    { id: 16, node: "BiOp2", seq: ["-"], callback: $ => "s_sub_2" }
+    { id: 13, node: "BiOp1", seq: ["*"], callback: $ => "mul A B" },
+    { id: 14, node: "BiOp1", seq: ["/"], callback: $ => "div A B" },
+    { id: 15, node: "BiOp2", seq: ["+"], callback: $ => "add A B" },
+    { id: 16, node: "BiOp2", seq: ["-"], callback: $ => "sub A B" }
   ],
   table: [
     { from: 0, by: "Expr", to: 1, sa: "LEAD" },

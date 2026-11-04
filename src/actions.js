@@ -42,3 +42,4 @@ export function denseJoin(arr, sep = "\n") {
     return arr.filter(it => it !== "").join(sep);
 }
 
+export const isEmpty = (s) => s === "";

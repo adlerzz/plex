@@ -5,37 +5,46 @@ const rules = {
     {"Ex1 TailEx2": $ => Act.denseJoin($)},
   ],
   "TailEx2": [
-    {"BiOp2 Ex1 TailEx2": $ => Act.denseJoin([$[1], $[2], $[0]])},
+    {"BiOp2 Ex1 TailEx2": $ => {
+      const load2 = ["pop B", "pop A"];
+      const push = "push A";
+      return Act.denseJoin([$[1], $[2], ...load2, $[0], push])}
+    },
     {"$$": $ => ""}
   ],
   "Ex1": [
     {"PartEx TailEx1": $ => Act.denseJoin($) }
   ],
   "TailEx1": [
-    {"BiOp1 PartEx TailEx1": $ => Act.denseJoin([$[1], $[2], $[0]])},
+    {"BiOp1 PartEx TailEx1": $ => {
+      const load2 = ["pop B", "pop A"];
+      const push = "push A";
+      return Act.denseJoin([$[1], $[2], ...load2, $[0], push]);
+    }},
     {"$$": $ => ""}
   ],
   "PartEx": [
     {"Unary NUM": $ => {
-      const res = `s_push_1 ${$[1]}`
-      const op = $[0] === "" ? "": "\n" + $[0];
-      return res + op;
+      const stor = `stor A ${$[1]}`
+      const op = Act.isEmpty($[0]) ? "": `${$[0]}`;
+      const push = "push A";
+      return Act.denseJoin([stor, op, push]); 
     }},
     {"( Expr )": $ => $[1]} 
   ],
   "Unary": [
-    {"-": $ => "s_neg_1"},
-    {"!": $ => "s_not_1"},
+    {"-": $ => "neg A"},
+    {"!": $ => "not A"},
     {"+": $ => ""},
     {"$$": $ => ""}
   ],
   "BiOp1": [
-    {"*": $ => "s_mul_2"},
-    {"/": $ => "s_div_2"},
+    {"*": $ => "mul A B"},
+    {"/": $ => "div A B"},
   ],
   "BiOp2": [
-    {"+": $ => "s_add_2"},
-    {"-": $ => "s_sub_2"}
+    {"+": $ => "add A B"},
+    {"-": $ => "sub A B"}
   ],
   
 }
