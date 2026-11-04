@@ -1,12 +1,19 @@
-stor A 9
-push A
 stor A 4
+push A
+stor A 9
 push A
 pop B
 pop A
 sub A B
 push A
-stor A 3
+stor A 2
+neg A
+push A
+stor A 1
+push A
+pop B
+pop A
+sub A B
 push A
 pop B
 pop A

@@ -23,15 +23,19 @@ export class State {
     /** @param {Bunch<ExtSnap>} value */
     set snaps(value) {
         this._snaps = value;
-        this.key = this._snaps
-            .map(extSnap => extSnap.coreKey()).array
-            .toSorted()
-            .join(",");
+        this.refreshKey();
     }
 
     /** Give this state a unique id. */
     assignId(){
         this.id = State.counter++;
+    }
+
+    refreshKey(){
+        this.key = this._snaps
+            .map(extSnap => extSnap.coreKey()).array
+            .toSorted()
+            .join(",");
     }
 
     /**
